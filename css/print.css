@@ -1,0 +1,67 @@
+
+@page {
+    size: A4 portrait;
+    margin: 0;
+}
+
+@media print {
+
+    html,
+    body {
+        width: 210mm;
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .editor-toolbar,
+    .workspace-heading,
+    .workspace-note {
+        display: none !important;
+    }
+
+    .workspace {
+        margin: 0;
+        padding: 0;
+    }
+
+    .document-page {
+        width: 210mm;
+        height: 297mm;
+        min-height: 297mm;
+        margin: 0;
+        padding: 12mm;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        overflow: hidden;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .document-page:last-of-type {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .section-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    input,
+    select,
+    textarea {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    button {
+        display: none !important;
+    }
+}
