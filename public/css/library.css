@@ -58,3 +58,6 @@ dialog input,dialog textarea {display:block;margin-top:8px;width:100%;border:1px
 @media print {.library-shell,.cloud-bar,dialog {display:none!important;}}
 
 .library-create-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.library-create-actions>button:not(.library-primary){padding:12px 16px;background:white;border:1px solid #c9d5e0;border-radius:6px;color:#10202c;cursor:pointer}
+
+.library-horse-logo{display:block;width:112px;height:68px;object-fit:contain;border-radius:10px}.library-brand{gap:18px}
+@media(max-width:600px){.library-horse-logo{width:90px;height:55px}.library-brand{gap:12px}}

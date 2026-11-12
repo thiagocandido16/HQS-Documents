@@ -67,23 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loading=true;editor().reset(type);current=null;dirty=false;title();setLocation(null);showEditor();$('document-type-dialog').close();
         $('save-state').textContent='Ainda não salvo';loading=false;
     }
-    $('import-document').onclick=()=>{if(!busy)$('import-document-file').click();};
-    $('import-document-file').onchange=async event=>{
-        const file=event.target.files[0];event.target.value='';
-        if(!file||busy||!leaveAllowed())return;
-        busy=true;loading=true;let backup;
-        try{
-            if(file.size>24*1024*1024)throw Error('O documento ultrapassa 24 MB.');
-            const parsed=JSON.parse(await file.text());
-            if(parsed.format&&!(parsed.format==='hqs-document'&&parsed.version===1))throw Error('Versão de arquivo não reconhecida.');
-            const state=parsed.format==='hqs-document'?parsed.state:parsed;
-            const {checkedState}=await import('./state-validation.js');checkedState(state);
-            backup=editor().snapshot();editor().restore(state);
-            current=null;dirty=true;title();setLocation(null);showEditor();
-            $('save-state').textContent='Cópia local aberta; salve para incluir na biblioteca';
-        }catch(error){if(backup)try{editor().restore(backup);}catch{}alert(error instanceof SyntaxError?'Arquivo JSON inválido.':error.message);}
-        finally{loading=false;busy=false;}
-    };
     $('new-document').onclick=()=>{if(!busy)$('document-type-dialog').showModal();};
     $('close-document-type').onclick=()=>$('document-type-dialog').close();
     document.querySelectorAll('[data-new-type]').forEach(button=>{button.onclick=()=>newDocument(button.dataset.newType);});
@@ -130,10 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(error){list.textContent=error.message;}
     };
     $('close-history').onclick=()=>$('history-dialog').close();
-    $('export-document').onclick=()=>{
-        const blob=new Blob([JSON.stringify(editor().snapshot(),null,2)],{type:'application/json'});
-        const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=(editor().meta().str || 'documento')+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
-    };
     document.querySelector('.workspace').addEventListener('input',markDirty);
     document.querySelector('.workspace').addEventListener('click',e=>{
         if(e.target.closest('.add-page-button,.delete-operation-page,.undo-page,.remove-photo,.it-add-page,.it-delete-page,.it-undo-page'))markDirty();

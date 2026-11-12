@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
         photos.append(createPhotoSlot(step * 2 - 1), createPhotoSlot(step * 2));
         const description = document.createElement("div");
         description.className = "operation-description";
-        addManualField(description, `${step}. DESCRIÇÃO DA OPERAÇÃO`, `operation-step-${step}`);
+        addManualField(description, 'DESCRIÇÃO DA OPERAÇÃO', `operation-step-${step}`);
         row.append(photos, description);
         return row;
     }
@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", () => {
             page.querySelector(".operation-page-number").textContent = `PÁGINA ${index + 3} DE ${total}`;
             page.querySelectorAll(".operation-row").forEach(row => {
                 step++;
-                row.querySelector(".operation-description label").textContent = `${step}. DESCRIÇÃO DA OPERAÇÃO`;
+                row.querySelector(".operation-description label").textContent = 'DESCRIÇÃO DA OPERAÇÃO';
                 row.querySelectorAll(".photo-slot").forEach((slot, photoIndex) => {
                     const number = step * 2 - 1 + photoIndex;
                     slot.querySelector(".photo-caption").textContent = `FOTO ${String(number).padStart(2, "0")}`;

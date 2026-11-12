@@ -55,6 +55,6 @@ O limite por snapshot é 24 MiB. Fotos e snapshots antigos contam no armazenamen
 
 ## Importante sobre migração
 
-Este repositório traz o editor e uma **biblioteca nova**. Documentos que estejam salvos no site antigo não são transferidos automaticamente. Antes da troca definitiva, exporte os documentos existentes e planeje a importação. O arquivo JSON exportado contém o estado completo; esta edição inclui Abrir cópia local para carregá-lo e salvá-lo na biblioteca nova. Guarde uma cópia de segurança.
+Este repositório traz o editor e uma **biblioteca nova**. Documentos que estejam salvos no site antigo não são transferidos automaticamente. Antes da troca definitiva, exporte os documentos existentes e planeje a importação. A interface não oferece importação/exportação de cópias locais. Documentos antigos precisam de uma migração administrativa separada. Guarde uma cópia de segurança.
 
 Os arquivos `public/index.html` e `public/editor.html` são cópias equivalentes, para manter os endereços antigos. Os botões de salvamento usam `/api/documents`; a chave Supabase nunca é colocada no navegador. Este pacote não depende de ChatGPT, do runtime Sites, de Next.js ou de Power Apps.

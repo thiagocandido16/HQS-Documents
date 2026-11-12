@@ -3,7 +3,7 @@ import { checkedState } from '../../lib/validation.js';
 const MAX = 24 * 1024 * 1024;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const METADATA = 'id,document_type,str,product,defect,author,revision,created_at,updated_at';
-const CONFLICT = 'Outra pessoa salvou uma versão mais recente. Seus dados continuam na tela. Exporte uma cópia antes de reabrir a versão atual.';
+const CONFLICT = 'Outra pessoa salvou uma versão mais recente. Seus dados continuam na tela. Mantenha esta aba aberta e consulte a versão atual em outra aba antes de continuar.';
 const json = (body, status = 200) => Response.json(body, { status, headers: {
   'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
 }});
@@ -130,7 +130,7 @@ export async function onRequestPost({ request, env }) {
         }).catch(() => {});
         throw new HttpError(409, CONFLICT);
       }
-      throw new HttpError(503, 'Não foi possível confirmar o salvamento. Exporte uma cópia e confira a biblioteca antes de tentar novamente.');
+      throw new HttpError(503, 'Não foi possível confirmar o salvamento. Mantenha esta aba aberta e confira a biblioteca em outra aba antes de tentar novamente.');
     }
     return json(await saved.json(), isNew ? 201 : 200);
   } catch (error) { return json({ error: error instanceof HttpError ? error.message : 'Não foi possível salvar. Seus dados continuam na tela; tente novamente.' }, error.status || 503); }
