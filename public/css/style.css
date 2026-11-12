@@ -1,6 +1,4 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 :root {
     --horse-dark: #101d28;
     --horse-blue: #1d3445;
@@ -13,20 +11,16 @@
     --danger: #c92d32;
     --success: #168451;
 }
-
 * {
     box-sizing: border-box;
 }
-
 body {
     margin: 0;
     background: #e9edf1;
     color: var(--text-main);
     font-family: 'Inter', Arial, sans-serif;
 }
-
 /* BARRA DO EDITOR */
-
 .editor-toolbar {
     height: 68px;
     padding: 0 36px;
@@ -37,13 +31,11 @@ body {
     align-items: center;
     box-shadow: 0 3px 14px #15232e22;
 }
-
 .toolbar-brand {
     display: flex;
     align-items: center;
     gap: 12px;
 }
-
 .brand-mark {
     width: 36px;
     height: 36px;
@@ -53,13 +45,11 @@ body {
     font-weight: 800;
     font-size: 21px;
 }
-
 .toolbar-brand strong {
     display: block;
     font-size: 13px;
     letter-spacing: 1.2px;
 }
-
 .toolbar-brand small {
     display: block;
     margin-top: 4px;
@@ -67,18 +57,15 @@ body {
     font-size: 9px;
     letter-spacing: 1px;
 }
-
 .toolbar-actions {
     display: flex;
     align-items: center;
     gap: 20px;
 }
-
 .document-status {
     color: #d2dce3;
     font-size: 11px;
 }
-
 .status-dot {
     display: inline-block;
     width: 7px;
@@ -87,7 +74,6 @@ body {
     border-radius: 50%;
     margin-right: 6px;
 }
-
 .btn-secondary {
     border: 1px solid #718493;
     border-radius: 7px;
@@ -98,18 +84,14 @@ body {
     cursor: pointer;
     transition: .2s;
 }
-
 .btn-secondary:hover {
     background: white;
     color: var(--horse-dark);
 }
-
 /* ÁREA DE TRABALHO */
-
 .workspace {
     padding: 35px 20px 55px;
 }
-
 .workspace-heading {
     max-width: 1050px;
     margin: 0 auto 22px;
@@ -117,26 +99,22 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-
 .eyebrow {
     color: var(--horse-accent);
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 1.7px;
 }
-
 .workspace-heading h1 {
     margin: 6px 0;
     font-size: 23px;
     font-weight: 700;
 }
-
 .workspace-heading p {
     margin: 0;
     color: var(--text-muted);
     font-size: 12px;
 }
-
 .page-indicator {
     border: 1px solid #d3dce3;
     background: white;
@@ -147,9 +125,7 @@ body {
     font-weight: 700;
     letter-spacing: .6px;
 }
-
 /* FOLHA A4 */
-
 .document-page {
     width: 210mm;
     min-height: 297mm;
@@ -162,9 +138,7 @@ body {
     flex-direction: column;
     gap: 13px;
 }
-
 /* CABEÇALHO */
-
 .document-header {
     min-height: 72px;
     display: grid;
@@ -174,39 +148,33 @@ body {
     padding-bottom: 14px;
     border-bottom: 2px solid var(--border);
 }
-
 .horse-logo {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-
 .horse-logo img {
     display: block;
     width: 170px;
     max-height: 58px;
     object-fit: contain;
 }
-
 .header-divider {
     height: 55px;
     background: #aebac4;
 }
-
 .document-title span {
     color: var(--horse-accent);
     font-size: 8px;
     font-weight: 800;
     letter-spacing: 1.7px;
 }
-
 .document-title h2 {
     margin: 4px 0 0;
     font-size: 23px;
     line-height: 1.15;
     letter-spacing: -.8px;
 }
-
 .document-number {
     background: var(--horse-dark);
     color: white;
@@ -214,14 +182,12 @@ body {
     border-radius: 8px;
     text-align: center;
 }
-
 .document-number span {
     display: block;
     font-size: 8px;
     letter-spacing: 1px;
     opacity: .75;
 }
-
 .document-number input {
     width: 100%;
     margin-top: 5px;
@@ -235,15 +201,12 @@ body {
     font-size: 15px;
     font-weight: 700;
 }
-
 /* IDENTIFICAÇÃO */
-
 .identification-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1.15fr 1fr;
     gap: 8px;
 }
-
 .field-card {
     padding: 10px;
     min-height: 59px;
@@ -251,7 +214,6 @@ body {
     border: 1px solid var(--border);
     border-radius: 7px;
 }
-
 .field-card > label {
     display: block;
     margin-bottom: 7px;
@@ -260,7 +222,6 @@ body {
     font-weight: 800;
     letter-spacing: .6px;
 }
-
 .field-card input,
 .field-card select {
     width: 100%;
@@ -272,12 +233,10 @@ body {
     font-size: 10px;
     font-weight: 600;
 }
-
 .choice-group {
     display: flex;
     gap: 13px;
 }
-
 .choice-group label {
     display: flex;
     align-items: center;
@@ -285,14 +244,11 @@ body {
     font-size: 9px;
     font-weight: 700;
 }
-
 .choice-group input {
     width: 12px;
     accent-color: var(--horse-dark);
 }
-
 /* SEÇÕES */
-
 .section-block {
     padding: 11px 12px 12px;
     border: 1px solid var(--border);
@@ -300,14 +256,12 @@ body {
     background: white;
     break-inside: avoid;
 }
-
 .section-heading {
     display: flex;
     align-items: center;
     gap: 9px;
     margin-bottom: 11px;
 }
-
 .section-icon {
     width: 25px;
     height: 25px;
@@ -320,35 +274,28 @@ body {
     font-size: 10px;
     font-weight: 800;
 }
-
 .section-heading h3 {
     margin: 0;
     color: var(--horse-dark);
     font-size: 12px;
     font-weight: 800;
 }
-
 .fields-grid {
     display: grid;
     gap: 10px;
 }
-
 .two-columns {
     grid-template-columns: 1fr 1fr;
 }
-
 .three-columns {
     grid-template-columns: repeat(3, 1fr);
 }
-
 .full-width {
     grid-column: 1 / -1;
 }
-
 .field {
     min-width: 0;
 }
-
 .field label {
     display: block;
     margin-bottom: 5px;
@@ -357,7 +304,6 @@ body {
     font-weight: 800;
     letter-spacing: .45px;
 }
-
 .field input,
 .field select,
 .field textarea,
@@ -374,7 +320,6 @@ body {
     outline: none;
     transition: border-color .2s, background .2s;
 }
-
 .field input:focus,
 .field select:focus,
 .field textarea:focus,
@@ -382,63 +327,50 @@ body {
     border-color: var(--horse-accent);
     background: white;
 }
-
 .field textarea,
 .observations-section textarea {
     resize: vertical;
     line-height: 1.5;
 }
-
 .field input::placeholder,
 .field textarea::placeholder,
 .observations-section textarea::placeholder {
     color: #a3afb8;
 }
-
 /* APROVAÇÕES */
-
 .approval-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
     margin-top: 14px;
 }
-
 .approval-field span {
     color: var(--text-muted);
     font-size: 8px;
     font-weight: 800;
 }
-
 .approval-field div {
     height: 30px;
     margin-top: 5px;
     border-bottom: 1px solid #8998a4;
 }
-
 .approval-extra {
     margin-top: 13px;
 }
-
 /* OBSERVAÇÕES */
-
 .observations-section textarea {
     min-height: 58px;
 }
-
 /* PÁGINA 2 — TABELA */
-
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
 }
-
 .horse-table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
 }
-
 .horse-table th {
     padding: 8px 6px;
     background: var(--surface);
@@ -448,29 +380,23 @@ body {
     font-weight: 800;
     text-align: left;
 }
-
 .horse-table td {
     height: 35px;
     padding: 3px;
     border: 1px solid var(--border);
 }
-
 .horse-table th:nth-child(1) {
     width: 20%;
 }
-
 .horse-table th:nth-child(2) {
     width: 38%;
 }
-
 .horse-table th:nth-child(3) {
     width: 18%;
 }
-
 .horse-table th:nth-child(4) {
     width: 24%;
 }
-
 .horse-table input {
     width: 100%;
     min-width: 0;
@@ -482,15 +408,12 @@ body {
     font-family: inherit;
     font-size: 9px;
 }
-
 /* MEIOS DE INSPEÇÃO */
-
 .equipment-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
-
 .equipment-item {
     min-width: 0;
     display: flex;
@@ -501,13 +424,11 @@ body {
     border: 1px solid var(--border);
     border-radius: 6px;
 }
-
 .equipment-item span {
     color: var(--horse-dark);
     font-size: 10px;
     font-weight: 800;
 }
-
 .equipment-item input {
     width: 100%;
     min-width: 0;
@@ -517,15 +438,12 @@ body {
     font-family: inherit;
     font-size: 9px;
 }
-
 /* EQUIPAMENTOS DE SEGURANÇA */
-
 .safety-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
 }
-
 .safety-grid label {
     min-width: 0;
     display: flex;
@@ -538,37 +456,30 @@ body {
     font-size: 9px;
     font-weight: 600;
 }
-
 .safety-grid label span {
     color: var(--horse-accent);
     font-size: 9px;
     font-weight: 800;
 }
-
 .safety-grid input[type="checkbox"] {
     width: 14px;
     height: 14px;
     accent-color: var(--horse-dark);
     flex-shrink: 0;
 }
-
 /* ORIENTAÇÕES GERAIS */
-
 .instruction-section {
     padding: 11px 13px;
 }
-
 .instruction-section .section-heading {
     margin-bottom: 9px;
 }
-
 .instruction-content {
     padding: 11px 13px;
     background: #f8fafb;
     border: 1px solid var(--border);
     border-radius: 6px;
 }
-
 .instruction-content p {
     margin: 0 0 9px;
     color: var(--text-main);
@@ -576,21 +487,16 @@ body {
     line-height: 1.55;
     text-align: justify;
 }
-
 .instruction-content p:last-child {
     margin-bottom: 0;
 }
-
 .instruction-warning {
     font-weight: 600;
 }
-
 .nonconforming-content {
     border-left: 3px solid var(--danger);
 }
-
 /* RODAPÉ */
-
 .document-footer {
     margin-top: auto;
     min-height: 38px;
@@ -603,20 +509,17 @@ body {
     color: white;
     border-radius: 5px;
 }
-
 .document-footer div strong {
     display: block;
     font-size: 11px;
     letter-spacing: 1px;
 }
-
 .document-footer div span,
 .document-footer > span {
     color: #d2dce3;
     font-size: 7px;
     letter-spacing: .5px;
 }
-
 .workspace-note {
     max-width: 850px;
     margin: 18px auto;
@@ -624,59 +527,46 @@ body {
     color: var(--text-muted);
     font-size: 11px;
 }
-
 /* RESPONSIVIDADE */
-
 @media screen and (max-width: 850px) {
     .document-page {
         width: 100%;
         min-height: auto;
         padding: 20px;
     }
-
     .document-header {
         grid-template-columns: 130px 1px 1fr 110px;
         gap: 10px;
     }
-
     .horse-logo img {
         width: 120px;
     }
-
     .document-title h2 {
         font-size: 17px;
     }
-
     .three-columns {
         grid-template-columns: repeat(2, 1fr);
     }
-
     .safety-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
 @media screen and (max-width: 520px) {
     .editor-toolbar {
         padding: 0 15px;
     }
-
     .toolbar-actions {
         gap: 8px;
     }
-
     .document-status {
         display: none;
     }
-
     .document-header {
         grid-template-columns: 1fr 1fr;
     }
-
     .header-divider {
         display: none;
     }
-
     .identification-grid,
     .two-columns,
     .three-columns,
@@ -684,8 +574,63 @@ body {
     .safety-grid {
         grid-template-columns: 1fr;
     }
-
     .approval-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Somente a página 1 STR. As regras originais acima são preservadas. */
+.str-page { gap: 5px; }
+.str-page > * { flex-shrink: 0; }
+.str-page .document-header { min-height: 56px; padding-bottom: 7px; gap: 12px; grid-template-columns: 155px 1px 1fr 132px; }
+.str-page .horse-logo img { width: 145px; max-height: 46px; }
+.str-page .header-divider { height: 42px; }
+.str-page .document-title h2 { font-size: 20px; }
+.str-page .document-number { padding: 8px; border-radius: 5px; }
+.str-page .document-number input { font-size: 13px; margin-top: 3px; }
+.str-page .identification-grid { gap: 6px; }
+.str-page .field-card { min-height: 43px; padding: 6px 8px; border-radius: 4px; }
+.str-page .field-card > label { margin-bottom: 4px; letter-spacing: .2px; }
+.str-page .section-block { padding: 6px 9px; border-radius: 4px; }
+.str-page .section-heading { gap: 7px; margin-bottom: 6px; }
+.str-page .section-icon { width: 19px; height: 19px; border-radius: 4px; font-size: 9px; }
+.str-page .section-heading h3 { font-size: 11px; }
+.str-page .fields-grid { gap: 5px 8px; }
+.str-page .str-reason .fields-grid,
+.str-page .str-operation .fields-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.str-page .str-operation .field:nth-child(n+5) { grid-column: span 2; }
+.str-page .field label { margin-bottom: 3px; font-size: 8px; letter-spacing: .1px; }
+.str-page .field input,
+.str-page .field select,
+.str-page .field textarea,
+.str-page .observations-section textarea { padding: 4px 6px; font-size: 10px; border-radius: 3px; }
+.str-page .field input:not([type="radio"]):not([type="checkbox"]),
+.str-page .field select { height: 23px; }
+.str-page .field textarea { height: 38px; min-height: 38px; line-height: 1.35; }
+.str-page .choice-group { gap: 10px; align-items: center; min-height: 20px; }
+.str-page .choice-group label { display: flex; align-items: center; gap: 4px; margin-bottom: 0; color: var(--text-main); }
+.str-page .choice-group input { width: 12px; height: 12px; margin: 0; padding: 0; flex-shrink: 0; }
+.str-page .str-responsibles,
+.str-page .str-primary-signatures { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.str-page .approval-grid { gap: 6px; margin-top: 6px; }
+.str-page .approval-field { min-width: 0; border: 1px solid #8998a4; border-radius: 2px; }
+.str-page .approval-field span { display: block; min-height: 22px; padding: 4px 5px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: 7px; line-height: 1.3; }
+.str-page .approval-field div { height: 35px; margin: 0; border: 0; background: white; }
+.str-page .approval-extra { margin-top: 6px; }
+.str-page .observations-section textarea { display: block; height: 40px; min-height: 40px; line-height: 1.35; }
+.str-page .document-footer { min-height: 30px; padding: 5px 10px; }
+@media screen and (max-width: 850px) {
+    .str-page .document-header { grid-template-columns: 120px 1px 1fr 110px; gap: 8px; }
+    .str-page .horse-logo img { width: 115px; }
+    .str-page .document-title h2 { font-size: 17px; }
+    .str-page .str-responsibles,
+    .str-page .str-primary-signatures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media screen and (max-width: 520px) {
+    .str-page .document-header { grid-template-columns: 1fr 1fr; }
+    .str-page .str-responsibles,
+    .str-page .str-primary-signatures { grid-template-columns: 1fr; }
+    .str-page .str-reason .fields-grid,
+    .str-page .str-operation .fields-grid { grid-template-columns: 1fr; }
+    .str-page .str-operation .field:nth-child(n+5) { grid-column: auto; }
 }

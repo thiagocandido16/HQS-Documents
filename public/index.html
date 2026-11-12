@@ -1,0 +1,640 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HQS Documents | HORSE</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/print.css">
+    <link rel="stylesheet" href="css/library.css">
+    <link rel="stylesheet" href="css/str-fields.css">
+    <link rel="stylesheet" href="css/ppe-page.css">
+    <link rel="stylesheet" href="css/it-editor.css">
+</head>
+
+<body class="library-mode">
+<input id="import-document-file" type="file" accept=".json,.hqs.json,application/json" hidden>
+    <section class="library-shell" aria-label="Documentos salvos">
+        <header class="library-top"><a class="library-brand" href="/">HQS<span>DOCUMENTS</span></a><span class="access-badge">Biblioteca compartilhada</span></header>
+        <main class="library-main">
+            <div class="library-intro"><div><p class="library-eyebrow">HORSE QUALITY SYSTEM</p><h1>Seus documentos,<br>sempre à mão.</h1><p>Crie documentos STR e IT, acompanhe as atualizações e retome de onde parou.</p></div><div class="library-create-actions"><button id="import-document" type="button">Abrir cópia local</button><button class="library-primary" id="new-document">+ Criar documento</button></div></div>
+            <div class="library-tools"><label for="document-search">Buscar documentos</label><input id="document-search" type="search" placeholder="Número STR ou IT, peça ou defeito"><select id="document-type-filter" aria-label="Filtrar tipo de documento"><option value="">STR e IT</option><option value="STR">STR</option><option value="IT">IT</option></select><button id="refresh-library">Atualizar lista</button></div>
+            <div class="library-summary"><strong id="document-count">Carregando documentos…</strong><span>Acesso pelo link · Todos podem consultar e editar</span></div>
+            <div id="library-message" role="status"></div><div id="document-list" class="document-list"></div>
+        </main>
+    </section>
+    <dialog id="document-type-dialog"><div class="dialog-title"><h2>Criar documento</h2><button id="close-document-type" aria-label="Fechar">×</button></div><p>Escolha o modelo que deseja preencher.</p><div class="document-type-options"><button type="button" data-new-type="STR"><strong>STR</strong><span>Solicitação de Trabalho</span></button><button type="button" data-new-type="IT"><strong>IT</strong><span>Instrução Inicial de Trabalho</span></button></div></dialog>
+    <div class="cloud-bar"><button id="back-library">← Documentos</button><strong id="current-document">Novo documento</strong><span id="save-state" role="status">Ainda não salvo</span><button id="open-history">Versões</button><button id="export-document">Exportar cópia</button><button class="cloud-save" id="save-document">Salvar documento</button></div>
+    <dialog id="save-dialog"><form method="dialog" id="save-form"><div class="dialog-title"><h2>Salvar documento</h2><button value="cancel" aria-label="Fechar">×</button></div><p>O documento e suas fotos ficam disponíveis para todos com o link. Cada salvamento cria uma versão.</p><label>Seu nome (opcional)<input id="save-author" maxlength="120" autocomplete="name"></label><label>O que mudou?<textarea id="save-note" rows="3" maxlength="1000" placeholder="Ex.: Atualização da operação de inspeção"></textarea></label><p id="save-error" role="alert"></p><button type="button" id="confirm-save" class="library-primary">Salvar versão</button></form></dialog>
+    <dialog id="history-dialog"><div class="dialog-title"><h2>Histórico de versões</h2><button id="close-history" aria-label="Fechar">×</button></div><p>Abra uma versão anterior para consultar. Se salvar, ela será registrada como uma nova versão.</p><div id="version-list"></div></dialog>
+
+
+    <!-- BARRA SUPERIOR -->
+    <header class="editor-toolbar">
+        <div class="toolbar-brand">
+            <span class="brand-mark">H</span>
+            <div>
+                <strong>HQS DOCUMENTS</strong>
+                <small>HORSE QUALITY SYSTEM</small>
+            </div>
+        </div>
+
+        <div class="toolbar-actions">
+            <span class="document-status">
+                <span class="status-dot"></span>
+                Editor STR
+            </span>
+
+            <button class="btn-secondary" onclick="window.print()">
+                Imprimir / PDF
+            </button>
+        </div>
+    </header>
+
+    <main class="workspace">
+
+        <div class="workspace-heading">
+            <div>
+                <span class="eyebrow">EDITOR DE DOCUMENTOS</span>
+                <h1>Solicitação de Trabalho</h1>
+                <p>Preencha os campos e salve o documento para acessar depois.</p>
+            </div>
+
+            <span class="page-indicator">A4 · RETRATO</span>
+        </div>
+
+        <!-- ==================================
+             PÁGINA 1 — SOLICITAÇÃO DE TRABALHO
+        =================================== -->
+
+        <article class="document-page str-page" aria-label="Página 1 — Solicitação de Trabalho">
+
+            <header class="document-header">
+
+                <div class="horse-logo">
+                    <img src="./assets/logo/horse-logo.png" alt="Logo oficial HORSE">
+                </div>
+
+                <div class="header-divider"></div>
+
+                <div class="document-title">
+                    <span>QUALITY SYSTEM</span>
+                    <h2>Solicitação de<br>Trabalho</h2>
+                </div>
+
+                <div class="document-number">
+                    <span>NÚMERO STR</span>
+                    <input type="text" value="" aria-label="Número STR">
+                </div>
+
+            </header>
+
+            <!-- IDENTIFICAÇÃO DO DOCUMENTO -->
+            <section class="identification-grid">
+
+                <div class="field-card">
+                    <label>DATA DE ABERTURA</label>
+                    <input type="date" value="">
+                </div>
+
+                <div class="field-card">
+                    <label>DATA DE FECHAMENTO</label>
+                    <input type="date">
+                </div>
+
+                <div class="field-card">
+                    <label>TIPO DE SOLICITAÇÃO</label>
+                    <select>
+                        <option value="">Selecione</option>
+                        <option>Triagem</option>
+                        <option>Retrabalho</option>
+                        <option>Reparo</option>
+                    </select>
+                </div>
+
+                <div class="field-card">
+                    <label>CSR?</label>
+                    <div class="choice-group">
+                        <label><input type="radio" name="csr" value="sim"> SIM</label>
+                        <label><input type="radio" name="csr" value="nao" checked> NÃO</label>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- IDENTIFICAÇÃO DO PRODUTO -->
+            <section class="section-block">
+
+                <div class="section-heading">
+                    <span class="section-icon">01</span>
+                    <h3>Identificação do produto</h3>
+                </div>
+
+                <div class="fields-grid three-columns">
+
+                    <div class="field">
+                        <label>PRODUTO / PEÇA</label>
+                        <input type="text" placeholder="Nome do produto">
+                    </div>
+
+                    <div class="field">
+                        <label>VEÍCULO / MOTOR</label>
+                        <input type="text" placeholder="Ex.: BR10">
+                    </div>
+
+                    <div class="field">
+                        <label>FORNECEDOR</label>
+                        <input type="text" placeholder="Nome do fornecedor">
+                    </div>
+
+                    <div class="field">
+                        <label>REFERÊNCIA(S)</label>
+                        <input type="text" placeholder="Código de referência">
+                    </div>
+
+                    <div class="field">
+                        <label>ORIGEM FORNECEDOR</label>
+                        <input type="text" placeholder="Origem">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- MOTIVO -->
+            <section class="section-block str-reason">
+
+                <div class="section-heading">
+                    <span class="section-icon">02</span>
+                    <h3>Motivo</h3>
+                </div>
+
+                <div class="fields-grid two-columns">
+
+                    <div class="field full-width">
+                        <label>MOTIVO</label>
+                        <textarea rows="2" placeholder="Descreva o motivo da solicitação..."></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label>ORIGEM DO PROBLEMA</label>
+                        <select>
+                            <option value="">Selecione</option>
+                            <option>Fornecedor</option>
+                            <option>Defeito do produto</option>
+                            <option>Logística</option>
+                            <option>Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>STATUS DA REFERÊNCIA</label>
+                        <input type="text" placeholder="Ex.: Verificação de estoque">
+                    </div>
+
+                    <div class="field">
+                        <label>PARAMETRIZAR</label>
+                        <div class="choice-group">
+                            <label><input type="radio" name="parametrizar" value="sim"> SIM</label>
+                            <label><input type="radio" name="parametrizar" value="nao"> NÃO</label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>RISCO</label>
+                        <input type="text" placeholder="Informe o risco">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- OPERAÇÃO E REPARO -->
+            <section class="section-block str-operation">
+
+                <div class="section-heading">
+                    <span class="section-icon">03</span>
+                    <h3>Operação e intervenção</h3>
+                </div>
+
+                <div class="fields-grid two-columns">
+
+                    <div class="field">
+                        <label>Nº SQUALL</label>
+                        <input type="text">
+                    </div>
+
+                    <div class="field">
+                        <label>Nº LUP</label>
+                        <input type="text">
+                    </div>
+
+                    <div class="field">
+                        <label>CENTRO DE CUSTO</label>
+                        <input type="text">
+                    </div>
+
+                    <div class="field">
+                        <label>IDENTIFICAÇÃO DE PTO DE CORTE</label>
+                        <input type="text">
+                    </div>
+
+                    <div class="field">
+                        <label>OPERAÇÃO PROVISÓRIA</label>
+                        <textarea rows="2"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label>REPARO (ADEQUAÇÃO)</label>
+                        <textarea rows="2"></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label>Nº DERROGAÇÃO</label>
+                        <input type="text">
+                    </div>
+
+                    <div class="field">
+                        <label>VENCIMENTO</label>
+                        <input type="date">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- RESPONSÁVEIS -->
+            <section class="section-block str-approvals">
+
+                <div class="section-heading">
+                    <span class="section-icon">04</span>
+                    <h3>Responsáveis e aprovação</h3>
+                </div>
+
+                <div class="fields-grid str-responsibles">
+
+                    <div class="field">
+                        <label>SOLICITANTE</label>
+                        <input type="text" placeholder="Nome do solicitante">
+                    </div>
+
+                    <div class="field">
+                        <label>SUPERVISOR SOLICITANTE</label>
+                        <input type="text" placeholder="Nome do responsável">
+                    </div>
+
+                    <div class="field">
+                        <label>SQF</label>
+                        <input type="text" placeholder="Nome do responsável">
+                    </div>
+
+                    <div class="field">
+                        <label>ENGENHARIA</label>
+                        <input type="text" placeholder="Nome do responsável">
+                    </div>
+
+                </div>
+
+                <div class="approval-grid str-primary-signatures">
+                    <div class="approval-field">
+                        <span>SOLICITANTE</span>
+                        <div></div>
+                    </div>
+
+                    <div class="approval-field">
+                        <span>SUPERVISOR SOLICITANTE</span>
+                        <div></div>
+                    </div>
+
+                    <div class="approval-field">
+                        <span>SQF</span>
+                        <div></div>
+                    </div>
+
+                    <div class="approval-field">
+                        <span>ENGENHARIA</span>
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="fields-grid two-columns approval-extra">
+
+                    <div class="field">
+                        <label>STR COBRADA POR</label>
+                        <div class="choice-group">
+                            <label><input type="radio" name="cobranca" value="hora"> HORA</label>
+                            <label><input type="radio" name="cobranca" value="peca" checked> PEÇA</label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label>FATOR DE RENDIMENTO (PEÇAS POR HORA)</label>
+                        <input type="text">
+                    </div>
+
+                </div>
+
+                <div class="approval-grid">
+                    <div class="approval-field">
+                        <span>EXECUTANTE</span>
+                        <div></div>
+                    </div>
+
+                    <div class="approval-field">
+                        <span>TEC. SEGURANÇA / EXECUTANTE</span>
+                        <div></div>
+                    </div>
+
+                    <div class="approval-field">
+                        <span>OPERAÇÃO PROVISÓRIA</span>
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="approval-grid">
+                    <div class="approval-field">
+                        <span>DIR. FABRICAÇÃO</span>
+                        <div></div>
+                    </div>
+
+                    <div class="approval-field">
+                        <span>DIR. QUALIDADE</span>
+                        <div></div>
+                    </div>
+
+                    <div class="approval-field">
+                        <span>CONTROLE DE GESTÃO</span>
+                        <div></div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- OBSERVAÇÕES -->
+            <section class="section-block observations-section">
+
+                <div class="section-heading">
+                    <span class="section-icon">05</span>
+                    <h3>Observações</h3>
+                </div>
+
+                <textarea rows="3" placeholder="Informações complementares..."></textarea>
+
+            </section>
+
+            <footer class="document-footer">
+                <div>
+                    <strong>HQS</strong>
+                    <span>HORSE QUALITY SYSTEM</span>
+                </div>
+
+                <span>DOCUMENTO INTERNO</span>
+                <span>PÁGINA 1 DE 5</span>
+            </footer>
+
+        </article>
+
+
+        <!-- ==================================
+             PÁGINA 2 — EXCLUSIVO HORSE
+        =================================== -->
+
+        <article class="document-page">
+
+            <header class="document-header">
+
+                <div class="horse-logo">
+                    <img src="./assets/logo/horse-logo.png" alt="Logo oficial HORSE">
+                </div>
+
+                <div class="header-divider"></div>
+
+                <div class="document-title">
+                    <span>SOLICITAÇÃO DE TRABALHO</span>
+                    <h2>Preenchimento<br>Exclusivo HORSE</h2>
+                </div>
+
+                <div class="document-number">
+                    <span>NÚMERO STR</span>
+                    <input type="text" value="" aria-label="Número STR">
+                </div>
+
+            </header>
+
+            <!-- HISTÓRICO DE MODIFICAÇÕES -->
+            <section class="section-block">
+
+                <div class="section-heading">
+                    <span class="section-icon">01</span>
+                    <h3>Histórico de modificações</h3>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="horse-table">
+                        <thead>
+                            <tr>
+                                <th>Índice</th>
+                                <th>Modificação</th>
+                                <th>Data</th>
+                                <th>Responsável</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td><input type="text" value=""></td>
+                                <td><input type="text" value="Início STR"></td>
+                                <td><input type="date"></td>
+                                <td><input type="text" placeholder="Responsável"></td>
+                            </tr>
+
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="date"></td>
+                                <td><input type="text"></td>
+                            </tr>
+
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="date"></td>
+                                <td><input type="text"></td>
+                            </tr>
+
+                            <tr>
+                                <td><input type="text"></td>
+                                <td><input type="text"></td>
+                                <td><input type="date"></td>
+                                <td><input type="text"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- MEIOS DE INSPEÇÃO -->
+            <section class="section-block">
+
+                <div class="section-heading">
+                    <span class="section-icon">02</span>
+                    <h3>MEIOS DE INSPEÇÃO/RETRABALHO/REPARO:</h3>
+                </div>
+
+                <div class="equipment-grid">
+
+                    <div class="equipment-item">
+                        <span>1-</span>
+                        <input type="text" placeholder="Meio utilizado">
+                    </div>
+
+                    <div class="equipment-item">
+                        <span>2-</span>
+                        <input type="text" placeholder="Meio utilizado">
+                    </div>
+
+                    <div class="equipment-item">
+                        <span>3-</span>
+                        <input type="text" placeholder="Meio utilizado">
+                    </div>
+
+                    <div class="equipment-item">
+                        <span>4-</span>
+                        <input type="text" placeholder="Meio utilizado">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- EQUIPAMENTOS DE SEGURANÇA -->
+            <section class="section-block">
+
+                <div class="section-heading">
+                    <span class="section-icon">03</span>
+                    <h3>EQUIPAMENTOS DE SEGURANÇA:</h3>
+                </div>
+
+                <div class="safety-grid">
+
+                    <label><span>1-</span><input type="checkbox"> Luvas</label>
+                    <label><span>2-</span><input type="checkbox"> Sapato de segurança</label>
+                    <label><span>3-</span><input type="checkbox"> Casquete</label>
+                    <label><span>4-</span><input type="checkbox"> Protetor auricular</label>
+                    <label><span>5-</span><input type="checkbox"> Óculos de proteção</label>
+
+                </div>
+
+            </section>
+
+            <!-- TAXA DE PEÇAS BLOQUEADAS -->
+            <section class="section-block">
+
+                <div class="section-heading">
+                    <span class="section-icon">04</span>
+                    <h3>TAXA DE PEÇAS BLOQUEADAS PARA EMISSÃO DE ALERTA:</h3>
+                </div>
+
+                <div class="fields-grid two-columns">
+
+                    <div class="field">
+                        <label>TAXA DE PEÇAS BLOQUEADAS</label>
+                        <input type="text" placeholder="Informe a taxa">
+                    </div>
+
+                    <div class="field">
+                        <label>CONTATO</label>
+                        <input type="text" placeholder="Contato responsável">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ORIENTAÇÕES DE EMBALAGEM E ETIQUETAGEM -->
+            <section class="section-block instruction-section">
+
+                <div class="section-heading">
+                    <span class="section-icon">05</span>
+                    <h3>ORIENTAÇÕES GERAIS QUANTO A EMBALAGEM E ETIQUETAGEM</h3>
+                </div>
+
+                <div class="instruction-content">
+
+                    <p>
+                        <strong>A –</strong> Caso ocorra bloqueio de peças, a caixa com a quantidade
+                        restante deve ser liberada com a quantidade real de peças OK liberadas.
+                    </p>
+
+                    <p>
+                        <strong>B –</strong> Quando se realizar transbordo de caixas, todas as etiquetas
+                        da caixa de origem e a etiqueta GALIA devem ser transferidas para a caixa onde
+                        será realizado o transbordo/armazenamento das peças. Observação: antes de
+                        realizar o transbordo, deve-se retirar todas as etiquetas da caixa vazia.
+                        As peças inspecionadas, retrabalhadas/reparadas ou depotadas devem ser
+                        embaladas conforme o modo original.
+                    </p>
+
+                    <p class="instruction-warning">
+                        <strong>Obs.:</strong> Atenção para que as peças não sofram quedas/choques/batidas.
+                        Caso ocorra, separar como peça NÃO CONFORME.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- ORIENTAÇÕES DE PRODUTOS NÃO CONFORMES -->
+            <section class="section-block instruction-section">
+
+                <div class="section-heading">
+                    <span class="section-icon">06</span>
+                    <h3>ORIENTAÇÕES GERAIS QUANTO A PRODUTOS NÃO CONFORMES</h3>
+                </div>
+
+                <div class="instruction-content nonconforming-content">
+
+                    <p>
+                        As peças não conformes devem ser identificadas com a
+                        "Etiqueta de Situação do Produto" (RPIF-HGQUA-2024-0003 -
+                        Tratar Produto Não Conforme) na cor laranja descrevendo a
+                        não conformidade da peça e devem ser bloqueadas na área de análise.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <footer class="document-footer">
+                <div>
+                    <strong>HQS</strong>
+                    <span>HORSE QUALITY SYSTEM</span>
+                </div>
+
+                <span>DOCUMENTO INTERNO</span>
+                <span>PÁGINA 2 DE 5</span>
+            </footer>
+
+        </article>
+
+        <p class="workspace-note">
+            Os campos desta página são editáveis. Utilize a impressão do navegador
+            para testar a visualização em PDF.
+        </p>
+
+    </main>
+
+    <script src="js/images.js"></script>
+    <script src="js/str-fields.js"></script>
+    <script src="js/ppe-page.js"></script>
+    <script src="js/it-editor.js"></script>
+    <script src="js/document-router.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/library.js"></script>
+
+</body>
+</html>
+
