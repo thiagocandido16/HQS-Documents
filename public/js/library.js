@@ -1,7 +1,7 @@
 /* Biblioteca compartilhada e versões dos documentos. */
 document.addEventListener('DOMContentLoaded', () => {
     const $ = id => document.getElementById(id);
-    let current = null, dirty = false, loading = false, busy = false, documents = [];
+    let current = null, dirty = false, loading = false, busy = false, documents = [], trashMode = false, trashEnabled = false, pendingAction = null;
     const editor = () => window.HQSEditor;
     const formatDate = value => new Intl.DateTimeFormat('pt-BR', {dateStyle:'short', timeStyle:'short'}).format(new Date(value));
     const message = (text, error = false) => { $('library-message').textContent=text; $('library-message').className=error?'error-message':''; };
@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const list=$('document-list');list.replaceChildren();
         if(!filtered.length) {
             const empty=document.createElement('div');empty.className='library-empty';
-            const h=document.createElement('h2');h.textContent=search?'Nenhum resultado':'Seu primeiro documento começa aqui.';
-            const p=document.createElement('p');p.textContent=search||filter?'Tente outro número, peça, defeito ou tipo de documento.':'Use “Criar documento” e escolha STR ou IT para começar.';
+            const h=document.createElement('h2');h.textContent=trashMode?'Lixeira vazia':search?'Nenhum resultado':'Seu primeiro documento começa aqui.';
+            const p=document.createElement('p');p.textContent=trashMode?'Documentos excluídos aparecerão aqui para consulta do histórico e restauração.':search||filter?'Tente outro número, peça, defeito ou tipo de documento.':'Use “Criar documento” e escolha STR ou IT para começar.';
             empty.append(h,p);list.append(empty);return;
         }
         filtered.forEach(doc=>{
@@ -43,13 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const defect=document.createElement('p');defect.className='document-defect';defect.textContent=doc.defect || 'Defeito não informado';
             const foot=document.createElement('div');foot.className='document-card-foot';
             const meta=document.createElement('small');meta.textContent=`Atualizado em ${formatDate(doc.updated_at)} · ${doc.author}`;
-            const button=document.createElement('button');button.textContent='Abrir documento →';button.onclick=()=>openDocument(doc.id);
+            const button=document.createElement('button');button.textContent=trashMode?'Restaurar documento':'Abrir documento →';button.onclick=()=>trashMode?showLifecycle(doc,'restore'):openDocument(doc.id);
+            if(trashEnabled){const audit=document.createElement('button');audit.textContent=trashMode?'Ver histórico':'Excluir';audit.className=trashMode?'':'document-delete';audit.onclick=()=>trashMode?showHistory(doc.id):showLifecycle(doc,'delete');foot.append(audit);}
             foot.append(meta,button);card.append(top,product,defect,foot);list.append(card);
         });
     }
     async function refreshLibrary() {
         message('Carregando documentos…');
-        try {documents=(await request('/api/documents')).documents;renderList();message('');}
+        try {const data=await request('/api/documents'+(trashMode?'?trash=1':''));documents=data.documents;trashEnabled=!!data.trashEnabled;$('toggle-trash').disabled=!trashEnabled;$('toggle-trash').textContent=trashMode?'← Documentos ativos':'Lixeira';renderList();message('');}
         catch(error){message(error.message,true);$('document-count').textContent='Lista indisponível';}
     }
     async function openDocument(id, version) {
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $('document-search').oninput=renderList;
     $('document-type-filter').onchange=renderList;
     $('refresh-library').onclick=refreshLibrary;
+    $('toggle-trash').onclick=()=>{if(busy)return;trashMode=!trashMode;refreshLibrary();};
     $('back-library').onclick=()=>{
         if(busy || !leaveAllowed())return;
         dirty=false;document.body.classList.add('library-mode');setLocation(null);refreshLibrary();window.scrollTo(0,0);
@@ -87,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         busy=true;const button=$('confirm-save');button.disabled=true;button.textContent='Salvando…';
         $('save-error').textContent='';
         try {
+            if(trashEnabled&&!validName($('save-author').value))throw Error('Informe seu nome e sobrenome.');
             const savedState=editor().snapshot();
             const data=await request('/api/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
                 id:current?.id,expectedRevision:current?.revision,state:savedState,meta:editor().meta(),author:$('save-author').value,note:$('save-note').value
@@ -99,19 +102,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     $('save-dialog').addEventListener('cancel',e=>{if(busy)e.preventDefault();});
     $('save-form').addEventListener('submit',e=>{if(busy)e.preventDefault();});
-    $('open-history').onclick=async()=>{
-        if(!current || busy)return;
+    async function showHistory(id){
+        if(busy)return;
         const list=$('version-list');list.textContent='Carregando versões…';$('history-dialog').showModal();
         try {
-            const data=await request(`/api/documents?id=${current.id}&history=1`);list.replaceChildren();
+            const data=await request(`/api/documents?id=${id}&history=1`);list.replaceChildren();
+            data.actions?.forEach(action=>{const row=document.createElement('article');row.className='version-row';const text=document.createElement('div');const h=document.createElement('strong');h.textContent=action.action==='delete'?'Documento excluído':'Documento restaurado';const p=document.createElement('p');p.textContent=action.reason;const meta=document.createElement('small');meta.textContent=formatDate(action.created_at)+' · Nome informado: '+action.author;text.append(h,p,meta);row.append(text);list.append(row);});
             data.versions.forEach(v=>{
                 const row=document.createElement('article');row.className='version-row';
                 const text=document.createElement('div');const h=document.createElement('strong');h.textContent=`Versão ${v.version}`;
                 const p=document.createElement('p');p.textContent=v.note;const meta=document.createElement('small');meta.textContent=`${formatDate(v.created_at)} · ${v.author}`;text.append(h,p,meta);
-                const b=document.createElement('button');b.textContent='Abrir versão';b.onclick=()=>openDocument(current.id,v.version);row.append(text,b);list.append(row);
+                const b=document.createElement('button');b.textContent='Abrir versão';b.onclick=()=>openDocument(id,v.version);row.append(text);if(!data.document.deleted_at)row.append(b);list.append(row);
             });
         } catch(error){list.textContent=error.message;}
-    };
+    }
+    $('open-history').onclick=()=>{if(current)showHistory(current.id);};
     $('close-history').onclick=()=>$('history-dialog').close();
     document.querySelector('.workspace').addEventListener('input',markDirty);
     document.querySelector('.workspace').addEventListener('click',e=>{
@@ -119,6 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.querySelector('.workspace').addEventListener('hqs-photochange',markDirty);
     window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+    const validName=value=>/^\p{L}[\p{L}\p{M}'’.-]*(?: +[\p{L}\p{M}'’.-]+)+$/u.test(value.trim())&&value.trim().length<=200;
+    function showLifecycle(doc,action){if(busy)return;pendingAction={doc,action};$('lifecycle-form').reset();$('lifecycle-error').textContent='';$('lifecycle-title').textContent=action==='delete'?'Excluir documento':'Restaurar documento';$('lifecycle-description').textContent=(doc.str||'Documento sem número')+(action==='delete'?' será movido para a lixeira. As fotos e todas as versões serão preservadas.':' voltará à biblioteca com as fotos e versões originais.');$('lifecycle-dialog').showModal();}
+    $('confirm-lifecycle').onclick=async()=>{if(busy||!pendingAction)return;if(!$('lifecycle-form').reportValidity())return;const author=$('lifecycle-author').value.trim(),reason=$('lifecycle-reason').value.trim();if(!validName(author)||!reason){$('lifecycle-error').textContent='Informe nome e sobrenome e o motivo.';return;}busy=true;$('confirm-lifecycle').disabled=true;try{const {doc,action}=pendingAction;await request('/api/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,id:doc.id,expectedRevision:doc.revision,expectedUpdatedAt:doc.updated_at,author,reason})});$('lifecycle-dialog').close();pendingAction=null;await refreshLibrary();}catch(error){$('lifecycle-error').textContent=error.message;}finally{busy=false;$('confirm-lifecycle').disabled=false;}};
+    $('lifecycle-dialog').addEventListener('cancel',e=>{if(busy)e.preventDefault();});
+    $('lifecycle-form').addEventListener('submit',e=>{if(busy)e.preventDefault();});
     title();refreshLibrary();
     const initialId=new URL(location).searchParams.get('document');if(initialId)openDocument(initialId);
 });

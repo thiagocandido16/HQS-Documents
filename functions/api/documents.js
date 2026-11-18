@@ -55,7 +55,7 @@ async function readBody(request) {
     text += decoder.decode();
   } finally { reader.releaseLock(); }
   let body;
-  try { body = JSON.parse(text); checkedState(body?.state); }
+  try { body = JSON.parse(text); if(!body||typeof body!=='object'||Array.isArray(body))throw new Error('Solicitação inválida.'); if(body?.action===undefined)checkedState(body?.state); }
   catch (error) { throw new HttpError(400, error instanceof SyntaxError ? 'Documento JSON inválido.' : error.message); }
   return body;
 }
@@ -63,25 +63,30 @@ async function readBody(request) {
 export async function onRequestGet({ request, env }) {
   try {
     const api = backend(env), url = new URL(request.url), id = url.searchParams.get('id');
+    const trashEnabled=env.HQS_TRASH_ENABLED==='true';
+    const metadata=METADATA+(trashEnabled?',deleted_at,deleted_by,delete_reason':'');
+    if(url.searchParams.get('trash')==='1'&&!trashEnabled)throw new HttpError(503,'A lixeira ainda não foi ativada no servidor.');
     if (!id) {
       // Explicit pagination avoids silently hiding records after Supabase's default row limit.
       const documents = []; let offset = 0;
       while (true) {
-        const rows = await result(await api.request(`/rest/v1/hqs_documents?select=${METADATA}&order=updated_at.desc,id.asc&limit=1000&offset=${offset}`));
+        const rows = await result(await api.request(`/rest/v1/hqs_documents?select=${metadata}${trashEnabled?(url.searchParams.get('trash')==='1'?'&deleted_at=not.is.null':'&deleted_at=is.null'):''}&order=updated_at.desc,id.asc&limit=1000&offset=${offset}`));
         documents.push(...rows); if (rows.length < 1000) break; offset += rows.length;
       }
-      return json({ documents });
+      return json({ documents, trashEnabled });
     }
     if (!UUID.test(id)) throw new HttpError(400, 'Documento inválido.');
-    const [doc] = await result(await api.request(`/rest/v1/hqs_documents?select=${METADATA}&id=eq.${id}`));
+    const [doc] = await result(await api.request(`/rest/v1/hqs_documents?select=${metadata}&id=eq.${id}`));
     if (!doc) throw new HttpError(404, 'Documento não encontrado.');
+    if(doc.deleted_at&&url.searchParams.get('history')!=='1')throw new HttpError(410,'Este documento está na lixeira. Restaure-o para abrir ou editar.');
     if (url.searchParams.get('history') === '1') {
       const versions = []; let offset = 0;
       while (true) {
         const rows = await result(await api.request(`/rest/v1/hqs_revisions?select=version,author,note,created_at&document_id=eq.${id}&order=version.desc&limit=1000&offset=${offset}`));
         versions.push(...rows); if (rows.length < 1000) break; offset += rows.length;
       }
-      return json({ document: doc, versions });
+      const actions=[];if(trashEnabled){let offset=0;while(true){const rows=await result(await api.request(`/rest/v1/hqs_document_actions?select=action,author,reason,created_at&document_id=eq.${id}&order=created_at.desc,id.desc&limit=1000&offset=${offset}`));actions.push(...rows);if(rows.length<1000)break;offset+=rows.length;}}
+      return json({ document: doc, versions, actions });
     }
     const requested = url.searchParams.get('version');
     const version = requested === null ? doc.revision : Number(requested);
@@ -102,6 +107,15 @@ export async function onRequestPost({ request, env }) {
     if (request.headers.get('Sec-Fetch-Site') === 'cross-site') throw new HttpError(403, 'Origem não permitida.');
     if (!request.headers.get('Content-Type')?.includes('application/json')) throw new HttpError(415, 'Envie um documento JSON.');
     const body = await readBody(request);
+    const fullName=value=>typeof value==='string'&&value.trim().length<=200&&/^\p{L}[\p{L}\p{M}'’.-]*(?: +[\p{L}\p{M}'’.-]+)+$/u.test(value.trim());
+    if(body.action!==undefined){
+      if(env.HQS_TRASH_ENABLED!=='true')throw new HttpError(503,'A lixeira ainda não foi ativada no servidor.');
+      if(!['delete','restore'].includes(body.action)||typeof body.id!=='string'||!UUID.test(body.id)||!Number.isSafeInteger(body.expectedRevision)||body.expectedRevision<1||typeof body.expectedUpdatedAt!=='string'||!Number.isFinite(Date.parse(body.expectedUpdatedAt))||!fullName(body.author)||typeof body.reason!=='string'||!body.reason.trim()||body.reason.length>2000)throw new HttpError(400,'Informe nome e sobrenome, motivo e um documento válido.');
+      const response=await backend(env).request('/rest/v1/rpc/hqs_document_action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_id:body.id,p_expected:body.expectedRevision,p_updated:body.expectedUpdatedAt,p_action:body.action,p_author:body.author.trim(),p_reason:body.reason.trim()})});
+      if(!response.ok){const failure=await response.json().catch(()=>({}));if(failure.code==='40001')throw new HttpError(409,'O documento mudou. Atualize a biblioteca e confira antes de tentar novamente.');if(failure.code==='P0002')throw new HttpError(404,'Documento não encontrado.');throw new HttpError(503,'Não foi possível confirmar a ação. Atualize a biblioteca antes de tentar novamente.');}
+      return json(await response.json());
+    }
+    if(env.HQS_TRASH_ENABLED==='true'&&!fullName(body.author))throw new HttpError(400,'Informe seu nome e sobrenome para registrar o salvamento.');
     const isNew = !body.id, id = isNew ? crypto.randomUUID() : body.id;
     if (typeof id !== 'string' || !UUID.test(id)) throw new HttpError(400, 'Documento inválido.');
     const expected = isNew ? 0 : body.expectedRevision;
