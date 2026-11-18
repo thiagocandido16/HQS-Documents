@@ -14,3 +14,7 @@ Nome e sobrenome são informados pela pessoa, sem verificação por login. São 
 O conteúdo e as versões ficam preservados; não existe exclusão definitiva por esta interface. Salvar uma aba antiga de um documento excluído é rejeitado pelo banco. O recurso não reduz o armazenamento utilizado.
 
 Validação local: testes da API com servidor Supabase simulado, incluindo conservação de fotos e versões, conflitos, nomes incompletos, motivos vazios, exclusão e restauração. A execução real da migração e a verificação no ambiente online ainda são necessárias.
+
+## Verificação em produção — 18/11/2026
+
+Migração aplicada no projeto HQS Documents e variável ativada no Cloudflare. Teste online concluído com documento fictício TESTE-LIXEIRA-20261118: exclusão, retorno HTTP 410 ao abrir, listagem na lixeira, histórico com responsável e motivo, restauração integral da foto/estado e conservação da versão 1. O documento fictício foi novamente excluído e permanece recuperável na lixeira. Os dois documentos preexistentes não foram alterados.

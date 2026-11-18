@@ -131,7 +131,7 @@ export async function onRequestPost({ request, env }) {
     const saved = await api.request('/rest/v1/rpc/hqs_save_document', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
       p_id: id, p_expected: expected, p_document_type: body.state.documentType === 'IT' ? 'IT' : 'STR',
       p_str: text(meta.str, 120), p_product: text(meta.product, 300), p_defect: text(meta.defect, 2000),
-      p_author: text(body.author, 120) || 'Não informado',
+      p_author: text(body.author, 200) || 'Não informado',
       p_note: text(body.note, 1000) || (isNew ? 'Criação do documento' : 'Atualização do documento'), p_state_key: key,
     }) });
     if (!saved.ok) {

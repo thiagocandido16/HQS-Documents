@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     async function refreshLibrary() {
         message('Carregando documentos…');
-        try {const data=await request('/api/documents'+(trashMode?'?trash=1':''));documents=data.documents;trashEnabled=!!data.trashEnabled;$('toggle-trash').disabled=!trashEnabled;$('toggle-trash').textContent=trashMode?'← Documentos ativos':'Lixeira';renderList();message('');}
+        try {const data=await request('/api/documents'+(trashMode?'?trash=1':''));documents=data.documents;trashEnabled=!!data.trashEnabled;$('toggle-trash').disabled=!trashEnabled;$('toggle-trash').title=trashEnabled?'Consultar documentos excluídos e restaurar':'A lixeira precisa ser ativada no banco';$('toggle-trash').textContent=trashMode?'← Documentos ativos':'Lixeira';renderList();message('');}
         catch(error){message(error.message,true);$('document-count').textContent='Lista indisponível';}
     }
     async function openDocument(id, version) {
