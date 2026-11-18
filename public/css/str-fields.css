@@ -9,8 +9,8 @@
 .horse-page .section-block.safety-section { padding:8px 10px; }
 .horse-page .safety-section .safety-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
 .horse-page .safety-section .safety-grid label { min-height:28px; padding:4px 6px; gap:5px; font-size:9px; }
-.horse-page .safety-section .custom-safety-item input[type="text"] { width:100%; min-width:0; height:18px; padding:1px 2px; border:0; border-bottom:1px solid #aebac4; border-radius:0; background:transparent; color:#182632; font:9px Inter,Arial,sans-serif; }
-.horse-page .safety-section .custom-safety-item input[type="text"]:focus { outline:1px solid #3b6178; background:white; }
+.horse-page .safety-section .custom-safety-item input[type="text"] { width:100%; min-width:0; height:18px; padding:1px 2px; border:0; border-bottom:1px solid #aebac4; border-radius:0; background:transparent; color:#29353D; font:9px Arial,sans-serif; }
+.horse-page .safety-section .custom-safety-item input[type="text"]:focus { outline:1px solid #6A7E8E; background:white; }
 .horse-page .safety-section input[type="checkbox"] { flex-shrink:0; }
 .horse-page .horse-table tbody td { height:24px; }
 .horse-page .section-block .section-heading { margin-bottom:5px; }
@@ -27,6 +27,6 @@
     .str-page .fields-grid { row-gap:4px; }
     .str-page .approval-grid { margin-top:5px; }
     .str-page .product-identification textarea { display:none; }
-    .str-page .product-identification .field-print-value { display:block; min-height:34px; padding:4px 6px; border:1px solid #dce3e9; border-radius:3px; white-space:pre-wrap; overflow-wrap:anywhere; color:#182632; font:9px/1.3 Inter,Arial,sans-serif; }
+    .str-page .product-identification .field-print-value { display:block; min-height:34px; padding:4px 6px; border:1px solid #D9D9D9; border-radius:3px; white-space:pre-wrap; overflow-wrap:anywhere; color:#29353D; font:9px/1.3 Arial,sans-serif; }
     .horse-page .safety-section .custom-safety-item input::placeholder { color:transparent; }
 }

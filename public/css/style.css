@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 :root {
-    --horse-dark: #101d28;
-    --horse-blue: #1d3445;
-    --horse-accent: #3b6178;
-    --text-main: #182632;
-    --text-muted: #71808c;
-    --border: #dce3e9;
-    --surface: #f3f6f8;
+    --horse-dark: #29353D;
+    --horse-blue: #29353D;
+    --horse-accent: #6A7E8E;
+    --text-main: #29353D;
+    --text-muted: #6A7E8E;
+    --border: #D9D9D9;
+    --surface: #F7F7F7;
     --white: #ffffff;
     --danger: #c92d32;
     --success: #168451;
@@ -16,9 +15,9 @@
 }
 body {
     margin: 0;
-    background: #e9edf1;
+    background: #D9D9D9;
     color: var(--text-main);
-    font-family: 'Inter', Arial, sans-serif;
+    font-family: Arial, sans-serif;
 }
 /* BARRA DO EDITOR */
 .editor-toolbar {
@@ -476,7 +475,7 @@ body {
 }
 .instruction-content {
     padding: 11px 13px;
-    background: #f8fafb;
+    background: #F7F7F7;
     border: 1px solid var(--border);
     border-radius: 6px;
 }
@@ -634,3 +633,7 @@ body {
     .str-page .str-operation .fields-grid { grid-template-columns: 1fr; }
     .str-page .str-operation .field:nth-child(n+5) { grid-column: auto; }
 }
+
+/* HORSE identity: preserve the supplied logo artwork and its aspect ratio. */
+img.brand-mark{display:block;width:76px;height:auto;max-height:48px;object-fit:contain;border:0;border-radius:10px;flex-shrink:0}.horse-logo img{border-radius:12px}.toolbar-brand{gap:16px}.toolbar-brand small{color:#D9D9D9}.editor-toolbar{box-shadow:none;border-bottom:1px solid #6A7E8E}.workspace-heading .eyebrow{color:#29353D}.workspace-heading h1{color:#29353D}
+@media(max-width:600px){img.brand-mark{width:64px;max-height:42px;border-radius:8px}.toolbar-brand{gap:10px}.toolbar-brand strong{font-size:11px}}

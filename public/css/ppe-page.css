@@ -1,32 +1,32 @@
-.ppe-page { box-sizing:border-box;width:210mm;min-height:297mm;margin:0 auto 25px;padding:10mm;background:white;color:#182632;box-shadow:0 8px 35px #172b3b20;display:flex;flex-direction:column;gap:9px;font-family:Inter,Arial,sans-serif; }
+.ppe-page { box-sizing:border-box;width:210mm;min-height:297mm;margin:0 auto 25px;padding:10mm;background:white;color:#29353D;box-shadow:0 8px 35px #172b3b20;display:flex;flex-direction:column;gap:9px;font-family:Arial,sans-serif; }
 .ppe-page * { box-sizing:border-box; }
-.ppe-header { display:flex;align-items:center;justify-content:space-between;gap:15px;padding-bottom:9px;border-bottom:2px solid #101d28; }
-.ppe-header span { font-size:8px;letter-spacing:1.5px;font-weight:800;color:#3b6178; }
+.ppe-header { display:flex;align-items:center;justify-content:space-between;gap:15px;padding-bottom:9px;border-bottom:2px solid #29353D; }
+.ppe-header span { font-size:8px;letter-spacing:1.5px;font-weight:800;color:#6A7E8E; }
 .ppe-header h2 { margin:5px 0 0;font-size:14px;line-height:1.3; }
 .ppe-document-number { font-size:10px;white-space:nowrap; }
-.ppe-observations { border:1px solid #dce3e9;background:#f8fafb;padding:9px 11px;border-radius:5px; }
+.ppe-observations { border:1px solid #D9D9D9;background:#F7F7F7;padding:9px 11px;border-radius:5px; }
 .ppe-observations h3 { margin:0 0 5px;font-size:11px; }
 .ppe-observations p { margin:0 0 5px;font-size:10px;line-height:1.45; }
 .ppe-observations p:last-child { margin-bottom:0; }
-.ppe-identification { display:grid;grid-template-columns:1fr 1fr;gap:15px;align-items:center;padding:6px 9px;border:1px solid #dce3e9;border-radius:4px;font-size:10px; }
+.ppe-identification { display:grid;grid-template-columns:1fr 1fr;gap:15px;align-items:center;padding:6px 9px;border:1px solid #D9D9D9;border-radius:4px;font-size:10px; }
 .ppe-sites { display:flex;gap:13px;align-items:center; }
 .ppe-sites label { display:flex;align-items:center;gap:4px; }
 .ppe-sector { display:flex;gap:8px;align-items:center;font-weight:700;min-width:0; }
-.ppe-page input[type="checkbox"] { width:13px;height:13px;margin:0;accent-color:#101d28;flex-shrink:0; }
-.ppe-page input[type="text"] { width:100%;min-width:0;border:0;border-bottom:1px solid #aebac4;padding:4px 3px;background:transparent;color:#182632;font:10px/1.3 Inter,Arial,sans-serif; }
-.ppe-page input[type="text"]:focus { outline:1px solid #3b6178;background:#f0f7fb; }
-.ppe-section-title { margin:0;padding:7px 9px;background:#edf1f4;border:1px solid #dce3e9;font-size:10px;line-height:1.3; }
-.ppe-guidance { margin:0;padding:5px 9px;border:1px solid #dce3e9;border-top:0;font-size:9px;color:#3b6178; }
-.ppe-list { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-left:1px solid #dce3e9;border-top:1px solid #dce3e9; }
-.ppe-item { min-width:0;display:flex;align-items:center;gap:7px;min-height:29px;padding:5px 7px;border-right:1px solid #dce3e9;border-bottom:1px solid #dce3e9;font-size:9px;line-height:1.35; }
+.ppe-page input[type="checkbox"] { width:13px;height:13px;margin:0;accent-color:#29353D;flex-shrink:0; }
+.ppe-page input[type="text"] { width:100%;min-width:0;border:0;border-bottom:1px solid #aebac4;padding:4px 3px;background:transparent;color:#29353D;font:10px/1.3 Arial,sans-serif; }
+.ppe-page input[type="text"]:focus { outline:1px solid #6A7E8E;background:#f0f7fb; }
+.ppe-section-title { margin:0;padding:7px 9px;background:#edf1f4;border:1px solid #D9D9D9;font-size:10px;line-height:1.3; }
+.ppe-guidance { margin:0;padding:5px 9px;border:1px solid #D9D9D9;border-top:0;font-size:9px;color:#6A7E8E; }
+.ppe-list { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-left:1px solid #D9D9D9;border-top:1px solid #D9D9D9; }
+.ppe-item { min-width:0;display:flex;align-items:center;gap:7px;min-height:29px;padding:5px 7px;border-right:1px solid #D9D9D9;border-bottom:1px solid #D9D9D9;font-size:9px;line-height:1.35; }
 .ppe-item:nth-child(4n+3),.ppe-item:nth-child(4n+4) { background:#fafcfd; }
-.ppe-additional { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-left:1px solid #dce3e9; }
-.ppe-extra-item { min-width:0;display:flex;align-items:center;gap:6px;min-height:29px;padding:4px 7px;border-right:1px solid #dce3e9;border-bottom:1px solid #dce3e9; }
+.ppe-additional { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-left:1px solid #D9D9D9; }
+.ppe-extra-item { min-width:0;display:flex;align-items:center;gap:6px;min-height:29px;padding:4px 7px;border-right:1px solid #D9D9D9;border-bottom:1px solid #D9D9D9; }
 .ppe-extra-item label { display:flex;align-items:center;gap:6px;font-size:9px; }
 .ppe-extra-item input[type="text"] { font-size:9px; }
 .ppe-responsible { margin-top:5px;display:grid;grid-template-columns:2fr 1.7fr 1fr;gap:8px 12px; }
 .ppe-signature-space { grid-column:1/-1;padding-top:32px;border-bottom:1px solid #8998a4;text-align:center;font-size:9px;line-height:2; }
-.ppe-responsible label { display:flex;flex-direction:column;gap:3px;font-size:8px;color:#3b6178;font-weight:700; }
+.ppe-responsible label { display:flex;flex-direction:column;gap:3px;font-size:8px;color:#6A7E8E;font-weight:700; }
 .ppe-responsible input[type="text"] { font-size:9px; }
 .ppe-print-value { display:none; }
 .ppe-page .operation-page-footer { min-height:16px; }
@@ -35,7 +35,7 @@
 @media print {
     .ppe-page {width:210mm;min-height:297mm;height:auto;margin:0;padding:10mm;box-shadow:none;break-before:page;page-break-before:always;break-after:auto;}
     .ppe-page input[type="text"] {display:none;}
-    .ppe-print-value {display:block;min-width:0;min-height:18px;width:100%;padding:3px 2px;border-bottom:1px solid #aebac4;white-space:pre-wrap;overflow-wrap:anywhere;color:#182632;font:9px/1.35 Inter,Arial,sans-serif;}
+    .ppe-print-value {display:block;min-width:0;min-height:18px;width:100%;padding:3px 2px;border-bottom:1px solid #aebac4;white-space:pre-wrap;overflow-wrap:anywhere;color:#29353D;font:9px/1.35 Arial,sans-serif;}
     .ppe-item,.ppe-extra-item,.ppe-responsible,.ppe-header,.ppe-identification {break-inside:avoid;page-break-inside:avoid;}
     .ppe-page .operation-page-footer {break-inside:avoid;}
 }
