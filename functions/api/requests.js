@@ -14,7 +14,7 @@ export async function onRequestGet({env,request}){try{
  const api=backend(env),id=request?new URL(request.url).searchParams.get('id'):null;
  if(id){if(!UUID.test(id))return json({error:'Identificador inválido.'},400);const [row]=await api(`hqs_requests?select=data,version&id=eq.${id}`);if(!row||row.data.deletedAt)return json({error:'Solicitação não encontrada.'},404);return json({record:{...row.data,serverVersion:row.version}});}
  const [rows,catalog,documents]=await Promise.all([all(api,'hqs_requests?select=data,version&order=updated_at.desc,id.asc'),all(api,'hqs_part_catalog?select=data&order=id.asc'),all(api,'hqs_documents?select=id,str,document_type,deleted_at&order=id.asc')]);
- return json({records:rows.map(r=>({...r.data,serverVersion:r.version})),catalog:catalog.map(r=>r.data),documents,mode:'shared'});
+ return json({records:rows.map(r=>{const linked=documents.filter(d=>!d.deleted_at&&d.document_type===r.data.type&&d.str===r.data.number);return {...r.data,serverVersion:r.version,...(linked.length===1?{documentId:linked[0].id}:{})};}),catalog:catalog.map(r=>r.data),documents,mode:'shared'});
 }catch(error){return json({error:error.message},error.status||503);}}
 export function applyAction(body,record,at=new Date().toISOString()){
  const action=body.action,values=body.values||{};
