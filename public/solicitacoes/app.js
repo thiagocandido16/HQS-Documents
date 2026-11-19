@@ -85,7 +85,7 @@ document.addEventListener('click',async e=>{
  if(action==='revise'){document.querySelector('#revision-form').reset();document.querySelector('#revision-dialog').showModal();}
  if(action==='history'){showHistory(records.find(r=>r.id===selectedId));}
  if(action==='restore'){document.querySelector('#restore-form').reset();document.querySelector('#restore-number').textContent=records.find(r=>r.id===selectedId).number;document.querySelector('#restore-dialog').showModal();}
- if(action==='create-document'&&shared){location.href='/editor.html?request='+encodeURIComponent(selectedId);return;}
+ if(action==='create-document'&&shared){location.href='/editor?request='+encodeURIComponent(selectedId);return;}
  if(action==='copy'){try{await navigator.clipboard.writeText(selected().number);notify('Número de teste copiado.');}catch{notify('Selecione o número no título para copiar.');}}
 });
 document.querySelector('#close-history').onclick=()=>document.querySelector('#history-dialog').close();
@@ -98,5 +98,6 @@ async function initialize(){
  navigate('home');
 }
 initialize();
+
 
 
