@@ -2,7 +2,7 @@ import {mountCommunication} from './communication.js';
 import {controlColumns,toControlRow,manualControlFields,operationStages,updateControl} from './control.js';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function showControl(container,records,{onOpen,onSave,notify}){
- const active=records.filter(r=>!r.deletedAt&&!records.some(child=>!child.deletedAt&&child.sourceRequestId===r.id));let query='',stage='';
+ const active=records.filter(r=>!r.deletedAt&&!records.some(child=>!child.deletedAt&&child.sourceRequestId&&child.sourceRequestId===r.id));let query='',stage='';
  container.innerHTML=`<div class="hero"><div><span class="eyebrow">CONTROLE DO SETOR</span><h1>Controle operacional</h1><p>Os dados da solicitação já aparecem aqui. A entrada em operação depende de confirmação.</p></div><button id="control-back">← Registros</button></div><section class="card"><div class="card-body"><div class="filters"><input id="control-search" aria-label="Buscar no controle" placeholder="Número, referência, peça ou fornecedor"><select id="control-stage" aria-label="Situação operacional"><option value="">Todas as situações</option>${operationStages.map(s=>`<option>${esc(s)}</option>`).join('')}</select></div><div id="control-results"></div></div></section>`;
  container.querySelector('#control-back').onclick=()=>onOpen(null);
  function render(){const shown=active.filter(r=>{const row=toControlRow(r);return (!stage||row.stage===stage)&&[r.number,r.description,r.reference,r.supplier].join(' ').toLocaleLowerCase('pt-BR').includes(query);});container.querySelector('#control-results').innerHTML=shown.length?`<div class="table-wrap"><table><thead><tr><th>Documento / peça</th><th>Referência</th><th>Operação</th><th>Documento</th><th></th></tr></thead><tbody>${shown.map(r=>{const row=toControlRow(r);return `<tr><td><b>${esc(r.number)}</b><span class="table-description">${esc(r.description)}</span></td><td>${esc(r.reference)}</td><td>${esc(row.stage)}</td><td>${esc(row.documentStatus)}</td><td><button data-control-id="${esc(r.id)}">Conferir controle</button></td></tr>`;}).join('')}</tbody></table></div>`:'<div class="empty">Nenhum registro encontrado. As novas solicitações aparecem automaticamente neste controle local.</div>';container.querySelectorAll('[data-control-id]').forEach(b=>b.onclick=()=>open(active.find(r=>r.id===b.dataset.controlId)));}
@@ -13,5 +13,6 @@ export function showControl(container,records,{onOpen,onSave,notify}){
  }
  container.querySelector('#control-search').oninput=e=>{query=e.target.value.toLocaleLowerCase('pt-BR');render();};container.querySelector('#control-stage').onchange=e=>{stage=e.target.value;render();};render();
 }
+
 
 

@@ -1,7 +1,7 @@
 export const normalizeReference=value=>String(value??'').trim().toLocaleUpperCase('pt-BR');
 export function referenceMatches(catalog,value){return catalog.filter(item=>normalizeReference(item.reference)===normalizeReference(value));}
 export function pendingItems(records,documents){
- return records.filter(r=>!r.deletedAt&&!records.some(child=>!child.deletedAt&&child.sourceRequestId===r.id)).map(record=>{
+ return records.filter(r=>!r.deletedAt&&!records.some(child=>!child.deletedAt&&child.sourceRequestId&&child.sourceRequestId===r.id)).map(record=>{
   const matches=documents.filter(d=>!d.deleted_at&&d.document_type===record.type&&normalizeReference(d.str)===normalizeReference(record.number));
   const missing=[['description','Peça'],['reference','Referência'],['supplier','Fornecedor'],['motor','Motor'],['defect','Defeito']].filter(([key])=>!String(record[key]||'').trim()).map(([,label])=>label);
   const issues=[];if(!matches.length)issues.push('Aguardando documento');if(matches.length>1)issues.push('Conferir documentos duplicados');
@@ -19,4 +19,5 @@ export function formTimer(clock=()=>performance.now()){
  const start=clock();let active=0,last=start,touched=false;
  return {touch(visible=true){const now=clock(),gap=now-last;if(touched&&visible&&gap>=0&&gap<=60000)active+=gap;last=now;touched=true;},result(){return {activeSeconds:Math.round(active/1000),elapsedSeconds:Math.round((clock()-start)/1000),method:'interaction-gaps-under-60s-v1',phase:'number-request'};}};
 }
+
 
