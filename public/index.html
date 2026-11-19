@@ -18,7 +18,7 @@
 <section class="library-shell" aria-label="Documentos salvos">
         <header class="library-top"><a class="library-brand" href="/" aria-label="HORSE Documents — início"><img class="library-horse-logo" src="assets/logo/horse-logo.png" alt="HORSE"><span>DOCUMENTS</span></a><span class="access-badge">Biblioteca compartilhada</span></header>
         <main class="library-main">
-            <div class="library-intro"><div><p class="library-eyebrow">HORSE QUALITY SYSTEM</p><h1>Seus documentos,<br>sempre à mão.</h1><p>Crie documentos STR e IT, acompanhe as atualizações e retome de onde parou.</p></div><div class="library-create-actions"><button class="library-primary" id="new-document">+ Criar documento</button></div></div>
+            <div class="library-intro"><div><p class="library-eyebrow">HORSE QUALITY SYSTEM</p><h1>Seus documentos,<br>sempre à mão.</h1><p>Crie documentos STR e IT, acompanhe as atualizações e retome de onde parou.</p></div><div class="library-create-actions"><a href="/solicitacoes/" style="display:inline-block;padding:12px 16px;border:1px solid #d9d9d9;border-radius:7px;color:#29353d;text-decoration:none;background:white">Solicitações e controle</a><button class="library-primary" id="new-document">+ Criar documento</button></div></div>
             <div class="library-tools"><label for="document-search">Buscar documentos</label><input id="document-search" type="search" placeholder="Número STR ou IT, peça ou defeito"><select id="document-type-filter" aria-label="Filtrar tipo de documento"><option value="">STR e IT</option><option value="STR">STR</option><option value="IT">IT</option></select><button id="refresh-library">Atualizar lista</button></div>
             <div class="library-summary"><div class="library-summary-start"><strong id="document-count">Carregando documentos…</strong><button id="toggle-trash" class="trash-link" disabled title="Consultar documentos excluídos e restaurar">Lixeira</button></div><span>Acesso pelo link · Todos podem consultar e editar</span></div>
             <div id="library-message" role="status"></div><div id="document-list" class="document-list"></div>
@@ -621,8 +621,9 @@
     <script src="js/it-editor.js"></script>
     <script src="js/document-router.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/library.js"></script>
+    <script src="js/request-prefill.js"></script><script src="js/library.js"></script>
 
 <dialog id="lifecycle-dialog"><form method="dialog" id="lifecycle-form"><div class="dialog-title"><h2 id="lifecycle-title">Excluir documento</h2><button value="cancel" formnovalidate aria-label="Fechar">×</button></div><p id="lifecycle-description"></p><label>Seu nome e sobrenome<input id="lifecycle-author" required maxlength="200" autocomplete="name"></label><p>Identificação informada por você, sem verificação por login.</p><label>Motivo<textarea id="lifecycle-reason" required maxlength="2000" rows="3"></textarea></label><p id="lifecycle-error" role="alert"></p><div class="lifecycle-actions"><button value="cancel" formnovalidate>Cancelar</button><button type="button" id="confirm-lifecycle" class="library-primary">Confirmar</button></div></form></dialog></body>
 </html>
+
 

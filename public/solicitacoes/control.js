@@ -1,0 +1,39 @@
+import {fullName} from './audit.js';
+
+export const controlColumns=[
+ ['item','Item'],['uet','UET'],['str','STR'],['it','IT'],['operationStatus','Aberta/Fechada?'],['criticality','Criticidade'],
+ ['intervention','Triagem/Depotagem/Retrabalho'],['squall','Squall'],['operationStart','Data início'],['operationEnd','Data fim'],
+ ['reference','Referência'],['description','Descrição'],['supplier','Fornecedor'],['line','Linha'],['responsible','Responsável criação'],
+ ['currentResponsible','Responsável atual'],['costCenter','CC da STR'],['requester','Solicitante'],['defect','Defeito'],['place','RT/Litígio'],
+ ['supplierType','POI/POE'],['motor','Motor'],['blocksLastMonth','Bloqueios último mês'],['notes','Observações'],['unitValue','Valor peça'],
+ ['updatedUnitValue','Valor peça atualizado'],['unitValue2025','Valor peça atualizado 2025'],['revaluation','Revalorização'],['blocksLast3Months','Bloqueios últimos 3 meses']
+];
+export const manualControlFields=[['uet','UET'],['criticality','Criticidade'],['line','Linha'],['currentResponsible','Responsável atual'],['requester','Solicitante'],['supplierType','POI/POE'],['operationStart','Data início'],['operationEnd','Data fim'],['notes','Observações']];
+export const operationStages=['Pendente de confirmação','Em operação','Encerrado'];
+export function toControlRow(record){
+ const extra=record.control||{},stage=extra.stage||operationStages[0];
+ return {...Object.fromEntries(controlColumns.map(([key])=>[key,''])),...extra,
+  item:record.sequence||record.id,str:record.type==='STR'?record.number:'',it:record.type==='IT'?record.number:(record.sourceNumber||''),
+  reference:record.reference||'',description:record.description||'',supplier:record.supplier||'',motor:record.motor||'',
+  intervention:record.intervention||'',squall:record.squall||'',responsible:record.responsible||'',costCenter:record.costCenter||'',
+  defect:record.defect||'',place:record.place||'',operationStatus:stage===operationStages[0]?'Não confirmada':stage===operationStages[1]?'Aberta':'Fechada',stage,
+  documentStatus:record.documentId?'Vinculado':'Vínculo ainda não verificado'};
+}
+function validDate(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T12:00:00Z');return Number.isFinite(+date)&&date.toISOString().slice(0,10)===value;}
+export function updateControl(record,values,name,at=new Date().toISOString()){
+ if(record.deletedAt)throw Error('Restaure o registro antes de alterar o controle.');
+ const actor=fullName(name),before=record.control||{},keys=['stage',...manualControlFields.map(([key])=>key)];
+ const control={...before};for(const key of keys)if(key in values){if(typeof values[key]!=='string'||values[key].length>2000)throw Error('Informação inválida.');control[key]=values[key].trim();}
+ if(!operationStages.includes(control.stage))throw Error('Selecione a situação operacional.');
+ for(const key of ['operationStart','operationEnd'])if(control[key]&&!validDate(control[key]))throw Error('Informe uma data válida.');
+ if(control.stage!==operationStages[0]&&!control.operationStart)throw Error('Informe a data de início da operação.');
+ if(control.stage===operationStages[2]&&!control.operationEnd)throw Error('Informe a data de fim para encerrar a operação.');
+ if(control.stage!==operationStages[2]&&control.operationEnd)throw Error('A data de fim exige a situação Encerrado.');
+ if(control.stage===operationStages[0]&&control.operationStart)throw Error('Confirme a entrada em operação antes de registrar a data de início.');
+ if(control.operationStart&&control.operationEnd&&control.operationEnd<control.operationStart)throw Error('A data de fim deve ser igual ou posterior ao início.');
+ const changes=keys.filter(k=>(before[k]||'')!==(control[k]||'')).map(field=>({field:'control.'+field,before:before[field]||'',after:control[field]||''}));
+ if(!changes.length)return record;
+ return {...record,control,updatedAt:at,history:[...record.history,{kind:'Controle operacional atualizado',actor,identity:'self-reported',reason:'Atualização do controle do setor',changes,at}]};
+}
+
+

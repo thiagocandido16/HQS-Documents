@@ -131,4 +131,16 @@ document.addEventListener('DOMContentLoaded', () => {
     $('lifecycle-form').addEventListener('submit',e=>{if(busy)e.preventDefault();});
     title();refreshLibrary();
     const initialId=new URL(location).searchParams.get('document');if(initialId)openDocument(initialId);
+    else {
+        const requestId=new URL(location).searchParams.get('request');
+        if(requestId)(async()=>{try{
+            const {record}=await request('/api/requests?id='+encodeURIComponent(requestId));
+            const list=await request('/api/documents');const matches=list.documents.filter(d=>d.document_type===record.type&&d.str===record.number);
+            if(matches.length>1)throw Error('Há mais de um documento com esse número. Confira a biblioteca antes de continuar.');
+            if(matches.length){await openDocument(matches[0].id);return;}
+            newDocument(record.type);window.HQSRequestPrefill.apply(record);dirty=true;title();
+            $('save-state').textContent='Dados da solicitação preenchidos. Confira e salve o documento.';
+        }catch(error){message(error.message,true);}})();
+    }
 });
+
