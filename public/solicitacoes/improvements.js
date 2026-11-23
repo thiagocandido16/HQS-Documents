@@ -1,3 +1,4 @@
+import {inspectionState} from './inspection.js';
 export const normalizeReference=value=>String(value??'').trim().toLocaleUpperCase('pt-BR');
 export function referenceMatches(catalog,value){return catalog.filter(item=>normalizeReference(item.reference)===normalizeReference(value));}
 export function pendingItems(records,documents){
@@ -8,6 +9,7 @@ export function pendingItems(records,documents){
   if(!record.control?.stage||record.control.stage==='Pendente de confirmação')issues.push('Aguardando confirmação de operação');
   if(!String(record.control?.currentResponsible||'').trim())issues.push('Responsável atual pendente');
   if(missing.length)issues.push('Informações incompletas: '+missing.join(', '));
+  const inspection=inspectionState(record);if(['overdue','ready'].includes(inspection.level))issues.push(inspection.label);
   return {record,issues,documents:matches};
  });
 }

@@ -25,6 +25,9 @@ export function updateControl(record,values,name,at=new Date().toISOString()){
  const actor=fullName(name),before=record.control||{},keys=['stage',...manualControlFields.map(([key])=>key)];
  const control={...before};for(const key of keys)if(key in values){if(typeof values[key]!=='string'||values[key].length>2000)throw Error('Informação inválida.');control[key]=values[key].trim();}
  if(!operationStages.includes(control.stage))throw Error('Selecione a situação operacional.');
+ if(before.inspection?.reason&&control.stage==='Encerrado'&&!before.inspection.withdrawnAt)throw Error('Use Confirmar retirada no acompanhamento, após confirmar a execução.');
+ if(before.inspection?.withdrawnAt&&(control.stage!=='Encerrado'||control.operationEnd!==new Date(Date.parse(before.inspection.withdrawnAt)-3*3600000).toISOString().slice(0,10)))throw Error('A retirada já foi confirmada. Preserve a situação e a data registradas no acompanhamento.');
+ if(before.inspection?.conditionMetAt&&control.operationStart>new Date(Date.parse(before.inspection.conditionMetAt)-3*3600000).toISOString().slice(0,10))throw Error('O início não pode ser posterior à condição informada como atendida.');
  for(const key of ['operationStart','operationEnd'])if(control[key]&&!validDate(control[key]))throw Error('Informe uma data válida.');
  if(control.stage!==operationStages[0]&&!control.operationStart)throw Error('Informe a data de início da operação.');
  if(control.stage===operationStages[2]&&!control.operationEnd)throw Error('Informe a data de fim para encerrar a operação.');

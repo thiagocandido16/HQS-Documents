@@ -1,6 +1,7 @@
 import {create,required} from '../../public/solicitacoes/model.js';
 import {fullName,auditedEdit,auditedRevise,auditedDelete,restoreRecord} from '../../public/solicitacoes/audit.js';
 import {updateControl,registerParameterization} from '../../public/solicitacoes/control.js';
+import {changeInspection} from '../../public/solicitacoes/inspection.js';
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 function backend(env){
@@ -33,6 +34,7 @@ export function applyAction(body,record,at=new Date().toISOString()){
  if(action==='edit')return auditedEdit(record,values,body.actor,at);
  if(action==='control')return updateControl(record,values,body.actor,at);
  if(action==='parameterization')return registerParameterization(record,values.sentAt,body.actor,body.reason,at);
+ if(action==='inspection')return changeInspection(record,values.mode,values,body.actor,body.reason,at);
  if(action==='delete')return auditedDelete(record,body.reason,body.actor,at);
  if(action==='restore')return restoreRecord(record,body.reason,body.actor,at);
  if(action==='revise'){const next=auditedRevise(record,body.reason,body.actor,at);next.number=record.number.replace(/\.\d+$/,'')+'.'+next.revision;return next;}
@@ -51,4 +53,5 @@ export async function onRequestPost({request,env}){try{
  let data;try{data=applyAction(body,record);}catch(error){return json({error:error.message},400);}
  const saved=await api('rpc/hqs_request_save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({p_id:body.id,p_expected:body.expected,p_data:data})});return json(saved);
  }catch(error){return json({error:error.message||'Não foi possível concluir a ação.'},error.status||503);}}
+
 
