@@ -35,5 +35,14 @@ export function updateControl(record,values,name,at=new Date().toISOString()){
  if(!changes.length)return record;
  return {...record,control,updatedAt:at,history:[...record.history,{kind:'Controle operacional atualizado',actor,identity:'self-reported',reason:'Atualização do controle do setor',changes,at}]};
 }
+export function registerParameterization(record,sentAt,name,reason='',at=new Date().toISOString()){
+ if(record.deletedAt||record.type!=='IT')throw Error('Selecione uma IT ativa para registrar o envio.');
+ const actor=fullName(name),stamp=Date.parse(sentAt);
+ if(typeof sentAt!=='string'||!Number.isFinite(stamp)||new Date(stamp).toISOString()!==sentAt||stamp>Date.parse(at))throw Error('Informe uma data e um horário de envio válidos, sem data futura.');
+ const before=record.control?.parameterizationSentAt||'';
+ if(before===sentAt)return record;
+ if(typeof reason!=='string'||reason.length>2000||(before&&!reason.trim()))throw Error('Informe o motivo da correção do envio.');
+ return {...record,control:{...record.control,parameterizationSentAt:sentAt},updatedAt:at,history:[...record.history,{kind:'Envio de parametrização registrado',actor,identity:'self-reported',reason:reason.trim()||'Envio manual no Outlook informado pelo responsável.',changes:[{field:'control.parameterizationSentAt',before,after:sentAt}],at}]};
+}
 
 

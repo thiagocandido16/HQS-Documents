@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 const base = new URL('../', import.meta.url);
 function files(dir) { return fs.readdirSync(dir, { withFileTypes:true }).flatMap(e=>e.isDirectory()?files(path.join(dir,e.name)):[path.join(dir,e.name)]); }
 const root = fileURLToPath(base);
-for (const file of [...files(path.join(root,'public/js')), ...files(path.join(root,'functions')), ...files(path.join(root,'lib'))]) {
+for (const file of [...files(path.join(root,'public')), ...files(path.join(root,'functions')), ...files(path.join(root,'lib'))]) {
   if(file.endsWith('.js')) execFileSync(process.execPath,['--check',file],{stdio:'pipe'});
 }
 for (const entry of ['index.html','editor.html']) {

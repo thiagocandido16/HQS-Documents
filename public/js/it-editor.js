@@ -67,7 +67,7 @@ window.HQSIT = {
                 const requester=document.createElement('section');requester.className='it-requester';page.append(requester);
                 field(requester,'start','DATA DE INÍCIO','date');field(requester,'costCenter','CENTRO DE CUSTO');field(requester,'requester','SOLICITANTE');field(requester,'area','ÁREA');
                 const signature=document.createElement('div');signature.className='it-signature';signature.textContent='Assinatura do solicitante';page.append(signature);
-                const notice=document.createElement('div');notice.className='it-notice';notice.textContent='1 — A IIT tem validade de 72h a partir da data de início da triagem. Até o fim deste prazo, a STR deve ser entregue ao prestador do serviço. Sem a STR após 72h do início do serviço, a atividade será suspensa até a entrega da mesma. 2 — A IIT deve ser entregue totalmente preenchida e assinada. O solicitante se responsabiliza por entregar a IIT impressa ou preenchida manualmente nas RTs, onde o formulário está disponível.';page.append(notice);
+                const notice=document.createElement('div');notice.className='it-notice';notice.textContent='1 — A IIT tem validade de 72h corridas a partir do envio do pedido de parametrização. Até o fim deste prazo, a STR deve ser entregue ao prestador do serviço. Sem a STR após 72h do envio do pedido de parametrização, a atividade será suspensa até a entrega da mesma. 2 — A IIT deve ser entregue totalmente preenchida e assinada. O solicitante se responsabiliza por entregar a IIT impressa ou preenchida manualmente nas RTs, onde o formulário está disponível.';page.append(notice);
             }
             footer(page);pages.push(page);host.insertBefore(page,trainingPage || null);update();sync();return page;
         }
@@ -99,3 +99,5 @@ window.HQSIT = {
         return{host,snapshot,restore,reset:()=>restore(structuredClone(initial)),meta:()=>({documentType:'IT',str:fields.get('number').value,product:fields.get('part').value,defect:fields.get('technicalDefect').value||fields.get('strDefect').value})};
     }
 };
+
+

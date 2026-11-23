@@ -1,6 +1,6 @@
 import {create,required} from '../../public/solicitacoes/model.js';
 import {fullName,auditedEdit,auditedRevise,auditedDelete,restoreRecord} from '../../public/solicitacoes/audit.js';
-import {updateControl} from '../../public/solicitacoes/control.js';
+import {updateControl,registerParameterization} from '../../public/solicitacoes/control.js';
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 function backend(env){
@@ -32,6 +32,7 @@ export function applyAction(body,record,at=new Date().toISOString()){
  if(!record)throw Error('Registro não encontrado.');
  if(action==='edit')return auditedEdit(record,values,body.actor,at);
  if(action==='control')return updateControl(record,values,body.actor,at);
+ if(action==='parameterization')return registerParameterization(record,values.sentAt,body.actor,body.reason,at);
  if(action==='delete')return auditedDelete(record,body.reason,body.actor,at);
  if(action==='restore')return restoreRecord(record,body.reason,body.actor,at);
  if(action==='revise'){const next=auditedRevise(record,body.reason,body.actor,at);next.number=record.number.replace(/\.\d+$/,'')+'.'+next.revision;return next;}
