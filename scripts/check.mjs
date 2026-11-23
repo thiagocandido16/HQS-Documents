@@ -1,3 +1,4 @@
+import './release.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,3 +19,5 @@ for (const entry of ['index.html','editor.html']) {
 const code=fs.readFileSync(new URL('../functions/api/documents.js',import.meta.url),'utf8');
 if(code.includes('cloudflare:workers')||code.includes('chatgpt-auth'))throw Error('Dependência antiga no servidor.');
 console.log('JavaScript e arquivos do editor conferidos. Configuração do Supabase será feita no painel.');
+
+
