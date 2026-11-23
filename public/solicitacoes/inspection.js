@@ -1,5 +1,7 @@
 import {fullName} from './audit.js';
 const HOUR=3600000;
+const fieldNames={reason:'Motivo da inspeção',owner:'Responsável pela revisão',exitCondition:'Condição para encerramento',nextReviewDate:'Próxima revisão',conditionMetAt:'Condição atendida em',conditionEvidence:'Evidência da condição atendida',withdrawalRequestedAt:'Pedido de retirada enviado em',requestEvidence:'Referência do pedido de retirada',withdrawnAt:'Retirada confirmada em',withdrawalEvidence:'Confirmação da execução',reviewedAt:'Revisão registrada em',reviewNote:'Justificativa para continuar'};
+export const inspectionFieldLabel=field=>field.startsWith('inspection.')?fieldNames[field.slice(11)]:({'control.stage':'Situação operacional','control.operationEnd':'Data de fim da operação'}[field]);
 const day=value=>{if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T12:00:00Z');return Number.isFinite(+date)&&date.toISOString().slice(0,10)===value;};
 const text=(value,label)=>{if(typeof value!=='string'||!value.trim()||value.length>2000)throw Error('Informe '+label+'.');return value.trim();};
 const stamp=(value,label,now)=>{const n=Date.parse(value);if(typeof value!=='string'||!Number.isFinite(n)||new Date(n).toISOString()!==value||n>Date.parse(now))throw Error('Informe '+label+' válido, sem data futura.');return value;};
