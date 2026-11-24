@@ -39,17 +39,17 @@ export function createDocumentWorkspace({content,isShared,onRecord,onNew,onSaved
    if(!isShared()){notify('O editor integrado está disponível no ambiente compartilhado.');return;}
    if(opening)return;opening=true;
    try{
-    if(record===undefined&&target){content.hidden=true;host.hidden=false;return;}
+    if(record===undefined&&target){content.hidden=true;host.hidden=false;window.scrollTo({top:0,behavior:'instant'});return;}
     const next=editorTarget(record?.id);
     if(target&&next!==target){
      const current=state();
      if(!current||current.busy){notify('Aguarde o carregamento ou salvamento do documento aberto.');return;}
-     if(!canReplaceEditor(current)&&!await confirmDiscard())return;
+     if(!canReplaceEditor(current)&&!await confirmDiscard()){content.hidden=true;host.hidden=false;window.scrollTo({top:0,behavior:'instant'});return;}
      frame.contentWindow.HQSDocumentSession.discard();
     }
     if(next!==target){contextId=record?.id||null;target=next;frame.src=next;}
     caption.textContent=record?record.number+' · '+record.description:'Biblioteca de documentos';back.hidden=!contextId;
-    content.hidden=true;host.hidden=false;
+    content.hidden=true;host.hidden=false;window.scrollTo({top:0,behavior:'instant'});
    }finally{opening=false;}
   },
   get isOpen(){return !host.hidden;}
