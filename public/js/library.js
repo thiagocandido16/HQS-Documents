@@ -2,6 +2,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const $ = id => document.getElementById(id);
     let current = null, dirty = false, loading = false, busy = false, documents = [], trashMode = false, trashEnabled = false, pendingAction = null;
+    const embedded=new URL(location).searchParams.get('embedded')==='1'&&window.parent!==window;
+    let initializing=!!new URL(location).searchParams.get('request');
+    window.HQSDocumentSession={get state(){return {dirty,busy:busy||loading||initializing,documentId:current?.id||null};},discard(){dirty=false;}};
+    const signalSaved=()=>{if(embedded)window.parent.postMessage({type:'hqs-document-saved'},location.origin);};
+    if(embedded){
+        document.body.classList.add('embedded-editor');
+        const style=document.createElement('style');style.textContent='.embedded-editor .library-header,.embedded-editor .library-create-actions a{display:none!important}.embedded-editor .library-intro{padding-top:24px}.embedded-editor .library-main{padding:24px}.embedded-editor .cloud-bar{flex-wrap:wrap;gap:10px}';document.head.append(style);
+    }
     const editor = () => window.HQSEditor;
     const formatDate = value => new Intl.DateTimeFormat('pt-BR', {dateStyle:'short', timeStyle:'short'}).format(new Date(value));
     const message = (text, error = false) => { $('library-message').textContent=text; $('library-message').className=error?'error-message':''; };
@@ -31,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!filtered.length) {
             const empty=document.createElement('div');empty.className='library-empty';
             const h=document.createElement('h2');h.textContent=trashMode?'Lixeira vazia':search?'Nenhum resultado':'Seu primeiro documento começa aqui.';
-            const p=document.createElement('p');p.textContent=trashMode?'Documentos excluídos aparecerão aqui para consulta do histórico e restauração.':search||filter?'Tente outro número, peça, defeito ou tipo de documento.':'Use “Criar documento” e escolha STR ou IT para começar.';
+            const p=document.createElement('p');p.textContent=trashMode?'Documentos excluídos aparecerão aqui para consulta do histórico e restauração.':search||filter?'Tente outro número, peça, defeito ou tipo de documento.':embedded?'Use “Solicitar número e criar” para iniciar com os dados da operação.':'Use “Criar documento” e escolha STR ou IT para começar.';
             empty.append(h,p);list.append(empty);return;
         }
         filtered.forEach(doc=>{
@@ -68,7 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loading=true;editor().reset(type);current=null;dirty=false;title();setLocation(null);showEditor();$('document-type-dialog').close();
         $('save-state').textContent='Ainda não salvo';loading=false;
     }
-    $('new-document').onclick=()=>{if(!busy)$('document-type-dialog').showModal();};
+    if(embedded)$('new-document').textContent='+ Solicitar número e criar';
+    $('new-document').onclick=()=>{if(busy)return;if(embedded){window.parent.postMessage({type:'hqs-document-request'},location.origin);return;}$('document-type-dialog').showModal();};
     $('close-document-type').onclick=()=>$('document-type-dialog').close();
     document.querySelectorAll('[data-new-type]').forEach(button=>{button.onclick=()=>newDocument(button.dataset.newType);});
     $('document-search').oninput=renderList;
@@ -96,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })});
             current={id:data.id,revision:data.revision,openedVersion:data.revision};dirty=JSON.stringify(editor().snapshot())!==JSON.stringify(savedState);title();setLocation(data.id);
             $('save-state').textContent=dirty?'Versão salva; há alterações posteriores não salvas':`Salvo às ${new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit'}).format(new Date())}`;
-            $('save-dialog').close();
+            $('save-dialog').close();signalSaved();
         } catch(error){$('save-error').textContent=error.message;}
         finally {busy=false;button.disabled=false;button.textContent='Salvar versão';}
     };
@@ -126,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
     const validName=value=>/^\p{L}[\p{L}\p{M}'’.-]*(?: +[\p{L}\p{M}'’.-]+)+$/u.test(value.trim())&&value.trim().length<=200;
     function showLifecycle(doc,action){if(busy)return;pendingAction={doc,action};$('lifecycle-form').reset();$('lifecycle-error').textContent='';$('lifecycle-title').textContent=action==='delete'?'Excluir documento':'Restaurar documento';$('lifecycle-description').textContent=(doc.str||'Documento sem número')+(action==='delete'?' será movido para a lixeira. As fotos e todas as versões serão preservadas.':' voltará à biblioteca com as fotos e versões originais.');$('lifecycle-dialog').showModal();}
-    $('confirm-lifecycle').onclick=async()=>{if(busy||!pendingAction)return;if(!$('lifecycle-form').reportValidity())return;const author=$('lifecycle-author').value.trim(),reason=$('lifecycle-reason').value.trim();if(!validName(author)||!reason){$('lifecycle-error').textContent='Informe nome e sobrenome e o motivo.';return;}busy=true;$('confirm-lifecycle').disabled=true;try{const {doc,action}=pendingAction;await request('/api/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,id:doc.id,expectedRevision:doc.revision,expectedUpdatedAt:doc.updated_at,author,reason})});$('lifecycle-dialog').close();pendingAction=null;await refreshLibrary();}catch(error){$('lifecycle-error').textContent=error.message;}finally{busy=false;$('confirm-lifecycle').disabled=false;}};
+    $('confirm-lifecycle').onclick=async()=>{if(busy||!pendingAction)return;if(!$('lifecycle-form').reportValidity())return;const author=$('lifecycle-author').value.trim(),reason=$('lifecycle-reason').value.trim();if(!validName(author)||!reason){$('lifecycle-error').textContent='Informe nome e sobrenome e o motivo.';return;}busy=true;$('confirm-lifecycle').disabled=true;try{const {doc,action}=pendingAction;await request('/api/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,id:doc.id,expectedRevision:doc.revision,expectedUpdatedAt:doc.updated_at,author,reason})});$('lifecycle-dialog').close();pendingAction=null;await refreshLibrary();signalSaved();}catch(error){$('lifecycle-error').textContent=error.message;}finally{busy=false;$('confirm-lifecycle').disabled=false;}};
     $('lifecycle-dialog').addEventListener('cancel',e=>{if(busy)e.preventDefault();});
     $('lifecycle-form').addEventListener('submit',e=>{if(busy)e.preventDefault();});
     title();refreshLibrary();
@@ -140,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(matches.length){await openDocument(matches[0].id);return;}
             newDocument(record.type);window.HQSRequestPrefill.apply(record);dirty=true;title();
             $('save-state').textContent='Dados da solicitação preenchidos. Confira e salve o documento.';
-        }catch(error){message(error.message,true);}})();
+        }catch(error){message(error.message,true);}finally{initializing=false;}})();
     }
 });
 
