@@ -79,7 +79,7 @@ function trash(){document.querySelector('#page-name').textContent='Lixeira';cons
 function control(initialId=null){document.querySelector('#page-name').textContent='Controle operacional';showControl(content,records,{initialId,documents,onOpen:id=>{if(id)selectedId=id;navigate(id?'detail':'list');},onSave:async value=>{if(!await save(records.map(r=>r.id===value.id?value:r)))return false;navigate('control');control((records.find(r=>!r.deletedAt&&r.sourceRequestId===value.id)||value).id);return true;},notify});}
 async function refreshShared(){if(!shared)return;const data=await api();records=data.records;catalog=data.catalog;documents=data.documents;}
 function dashboard(){document.querySelector('#page-name').textContent='Pendências e tempo';showDashboard(content,records,documents,id=>{selectedId=id;navigate('detail');});}
-function navigate(next){documentWorkspace.hide();view=next;itAlerts?.render();document.querySelectorAll('nav [data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===(['documents','integration','new','home','suggestions','trash','control','dashboard'].includes(next)?next:'list')));({documents:documentLibrary,home,suggestions,trash,control,dashboard,list,new:()=>form(false),edit:()=>form(true),detail,integration}[next]||list)();window.scrollTo({top:0,behavior:'instant'});}
+function navigate(next){document.body.classList.toggle('home-view',next==='home');documentWorkspace.hide();view=next;itAlerts?.render();document.querySelectorAll('nav [data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===(['documents','integration','new','home','suggestions','trash','control','dashboard'].includes(next)?next:'list')));({documents:documentLibrary,home,suggestions,trash,control,dashboard,list,new:()=>form(false),edit:()=>form(true),detail,integration}[next]||list)();window.scrollTo({top:0,behavior:'instant'});}
 document.addEventListener('click',async e=>{
  const button=e.target.closest('button');if(!button)return;
  if(button.dataset.view){try{if(['list','dashboard','control'].includes(button.dataset.view))await refreshShared();navigate(button.dataset.view);}catch(error){notify(error.message);}return;}
@@ -102,7 +102,7 @@ document.querySelector('#restore-form').onsubmit=async e=>{if(e.submitter?.value
 async function initialize(){
  document.querySelectorAll('nav button').forEach(b=>b.disabled=true);
  content.textContent='Carregando o controle…';
- try{const data=await connectShared();if(data){shared=true;records=data.records;catalog=data.catalog;documents=data.documents;document.querySelector('.prototype').textContent='● Controle compartilhado';document.querySelector('.notice').textContent='Dados compartilhados no projeto HQS Documents. Emissões DEMO até a validação final da numeração. Nome do responsável informado pela própria pessoa.';}}
+ try{const data=await connectShared();if(data){shared=true;records=data.records;catalog=data.catalog;documents=data.documents;document.querySelector('.prototype').textContent='● Controle compartilhado';}}
  catch(error){content.textContent=error.message+' Atualize a página para tentar novamente.';document.querySelectorAll('nav button').forEach(b=>b.disabled=true);return;}
  document.querySelectorAll('nav button').forEach(b=>b.disabled=false);
  itAlerts=installItAlerts({getRecords:()=>records,getDocuments:()=>documents,onOpen:id=>{selectedId=id;navigate('detail');}});

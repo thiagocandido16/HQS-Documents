@@ -11,3 +11,5 @@
 
 .documents-view .notice{display:none}.documents-view main{padding-top:16px}.documents-view .document-context{min-height:40px;padding:8px 14px;margin-bottom:12px;gap:10px}.documents-view .document-context button{padding:6px 10px}.documents-view .document-editor-frame{height:calc(100vh - 174px);min-height:650px}
 
+.home-view main{padding-top:18px;padding-bottom:20px}.home-view .home-wallpaper{min-height:max(650px,calc(100vh - 150px))}@media(min-width:701px){.home-view .home-wallpaper{background-size:cover;background-position:center}}@media(max-width:700px){.home-view .home-wallpaper{min-height:730px;background-size:auto 108%}}
+
