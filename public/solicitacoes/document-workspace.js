@@ -47,7 +47,7 @@ export function createDocumentWorkspace({content,isShared,onRecord,onNew,onSaved
      frame.contentWindow.HQSDocumentSession.discard();
     }
     if(next!==target){contextId=record?.id||null;target=next;frame.src=next;}
-    caption.textContent=record?record.number+' · '+record.description:'Biblioteca de documentos';back.hidden=!contextId;
+    caption.textContent=record?record.number+' · '+record.description:'Biblioteca de documentos';back.hidden=!contextId;toolbar.hidden=!contextId;
     content.hidden=true;host.hidden=false;document.body.classList.add('documents-view');window.scrollTo({top:0,behavior:'instant'});
    }finally{opening=false;}
   },
