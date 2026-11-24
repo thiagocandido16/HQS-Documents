@@ -10,8 +10,7 @@ export function createDocumentWorkspace({content,isShared,onRecord,onNew,onSaved
  const toolbar=document.createElement('div');toolbar.className='document-context';
  const caption=document.createElement('span');caption.textContent='Biblioteca de documentos';
  const back=document.createElement('button');back.textContent='← Voltar ao registro';back.hidden=true;
- const hint=document.createElement('span');hint.className='subtle';hint.textContent='Ao consultar outra tela, seu documento permanece aberto aqui.';
- toolbar.append(back,caption,hint);
+ toolbar.append(back,caption);
  const frame=document.createElement('iframe');frame.title='Criação e edição de documentos STR e IT';frame.className='document-editor-frame';
  host.append(toolbar,frame);content.after(host);
  let target=null,contextId=null,opening=false;
@@ -34,22 +33,22 @@ export function createDocumentWorkspace({content,isShared,onRecord,onNew,onSaved
   Promise.resolve(onSaved()).catch(()=>notify('Documento salvo. Atualize a consulta para conferir o vínculo.'));
  });
  return {
-  hide(){host.hidden=true;content.hidden=false;},
+  hide(){host.hidden=true;content.hidden=false;document.body.classList.remove('documents-view');},
   async open(record){
    if(!isShared()){notify('O editor integrado está disponível no ambiente compartilhado.');return;}
    if(opening)return;opening=true;
    try{
-    if(record===undefined&&target){content.hidden=true;host.hidden=false;window.scrollTo({top:0,behavior:'instant'});return;}
+    if(record===undefined&&target){content.hidden=true;host.hidden=false;document.body.classList.add('documents-view');window.scrollTo({top:0,behavior:'instant'});return;}
     const next=editorTarget(record?.id);
     if(target&&next!==target){
      const current=state();
      if(!current||current.busy){notify('Aguarde o carregamento ou salvamento do documento aberto.');return;}
-     if(!canReplaceEditor(current)&&!await confirmDiscard()){content.hidden=true;host.hidden=false;window.scrollTo({top:0,behavior:'instant'});return;}
+     if(!canReplaceEditor(current)&&!await confirmDiscard()){content.hidden=true;host.hidden=false;document.body.classList.add('documents-view');window.scrollTo({top:0,behavior:'instant'});return;}
      frame.contentWindow.HQSDocumentSession.discard();
     }
     if(next!==target){contextId=record?.id||null;target=next;frame.src=next;}
     caption.textContent=record?record.number+' · '+record.description:'Biblioteca de documentos';back.hidden=!contextId;
-    content.hidden=true;host.hidden=false;window.scrollTo({top:0,behavior:'instant'});
+    content.hidden=true;host.hidden=false;document.body.classList.add('documents-view');window.scrollTo({top:0,behavior:'instant'});
    }finally{opening=false;}
   },
   get isOpen(){return !host.hidden;}

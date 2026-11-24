@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const signalSaved=()=>{if(embedded)window.parent.postMessage({type:'hqs-document-saved'},location.origin);};
     if(embedded){
         document.body.classList.add('embedded-editor');
-        const style=document.createElement('style');style.textContent='.embedded-editor .library-header,.embedded-editor .library-create-actions a{display:none!important}.embedded-editor .library-intro{padding-top:24px}.embedded-editor .library-main{padding:24px}.embedded-editor .cloud-bar{flex-wrap:wrap;gap:10px}';document.head.append(style);
+        const style=document.createElement('link');style.rel='stylesheet';style.href='/css/embedded-editor.css';document.head.append(style);
+        document.querySelector('.library-intro h1').textContent='Documentos';
     }
     const editor = () => window.HQSEditor;
     const formatDate = value => new Intl.DateTimeFormat('pt-BR', {dateStyle:'short', timeStyle:'short'}).format(new Date(value));

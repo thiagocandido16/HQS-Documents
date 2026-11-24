@@ -1,0 +1,18 @@
+.embedded-editor .library-top,
+.embedded-editor .library-create-actions a,
+.embedded-editor .library-eyebrow,
+.embedded-editor .library-intro p,
+.embedded-editor .library-summary > span {display:none!important}
+.embedded-editor .library-main {max-width:none;padding:20px 24px 28px}
+.embedded-editor .library-intro {flex-direction:row;align-items:center;gap:12px;padding:0 0 16px}
+.embedded-editor .library-intro h1 {font-size:24px;letter-spacing:-.5px;line-height:1.2;margin:0}
+.embedded-editor .library-primary {padding:10px 14px}
+.embedded-editor .library-tools {margin:16px 0 12px}
+.embedded-editor .library-summary {margin:12px 0 16px}
+.embedded-editor .cloud-bar {flex-wrap:wrap;gap:10px}
+@media(max-width:650px){
+ .embedded-editor .library-main{padding:16px}
+ .embedded-editor .library-intro{flex-wrap:wrap}
+ .embedded-editor .library-intro h1{font-size:22px}
+}
+
